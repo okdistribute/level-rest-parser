@@ -3,7 +3,7 @@ var config = {
   'PORT': 5000,
   'HOSTNAME': 'http://localhost',
   'HOST': 'http://localhost:5000',
-  'DB': '/tmp/db',
+  'DB': '../data',
 };
 
 module.exports = config;
