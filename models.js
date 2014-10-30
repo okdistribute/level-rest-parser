@@ -72,8 +72,7 @@ function MetaDat(db) {
     {
       'name': 'license',
       'type': 'string',
-      'optional': true,
-      'default': 'BSD'
+      'optional': true
     },
     {
       'name': 'keywords',

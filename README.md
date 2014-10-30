@@ -56,7 +56,6 @@ function Users(db) {
 
 // make it inherit from RestModel
 util.inherits(Users, RestModel);
-
 ```
 
 #### Wire up your models to your server
@@ -82,7 +81,16 @@ router.addRoute('/api/:model/:id?', function(req, res, opts) {
 var server = http.createServer(router)''
 server.listen(8000)''
 ```
+
 *note: this uses res.end() under the hood.*
+
+#### Auto incremented keys
+See https://github.com/karissa/level-restful/blob/master/models.js#L53 for an example of auto incremented keys.
+
+
+#### Compound Keys and Shared Containers
+This library extens from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers. Instead of using Models, use this library's RestModels.
+
 
 # License
 Copyright (c) 2014, Karissa McKelvey
