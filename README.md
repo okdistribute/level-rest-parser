@@ -19,8 +19,6 @@ $ npm install level-restful
 
 You extend the base class to give you REST post, put, delete, and get. You specify a list of fields to ensure validation of your object so the database stays safe from any pesky clients.
 
-**Create your models**
-
 ```js
 var http = require('http');
 var level = require('level');

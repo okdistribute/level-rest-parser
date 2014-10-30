@@ -4,8 +4,8 @@ var util = require('util');
 var debug = require('debug')('models');
 var timestamp = require('monotonic-timestamp');
 
-var RestModels = require('./index.js');
-var defaults = require('./defaults.js');
+var RestModels = require('..');
+var defaults = require('../defaults.js');
 
 // TODO pass in overrides
 module.exports = function() {
