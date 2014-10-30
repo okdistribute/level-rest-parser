@@ -54,9 +54,9 @@ function Users(db) {
   RestModels.call(this, db, 'users', 'handle', fields)
 }
 
-models = {
-  'users': Users
-}
+// make it inherit from RestModel
+util.inherits(Users, RestModel);
+
 ```
 
 #### Wire up your models to your server
@@ -64,6 +64,11 @@ models = {
 The below example is just one of the many ways of wiring up your models to the server. Because this is a tool, **not a framework**, we leave it up to you to tailor it to your use case.
 
 ```js
+
+models = {
+  'users': Users
+}
+
 var Router = require('routes-router')
 var router = Router()
 
