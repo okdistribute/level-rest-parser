@@ -38,8 +38,12 @@
   },
   "devDependencies": {
     "debug": "^2.1.0",
-    "tape": "^3.0.1",
+    "grunt-complexity": "^0.2.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jssemicoloned": "0.0.6",
     "request": "^2.47.0",
-    "rimraf": "^2.2.8"
+    "rimraf": "^2.2.8",
+    "tape": "^3.0.1"
   }
 }

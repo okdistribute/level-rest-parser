@@ -4,6 +4,6 @@ var config = {
   'HOSTNAME': 'http://localhost',
   'HOST': 'http://localhost:5000',
   'DB': '/tmp/db',
-}
+};
 
-module.exports = config
+module.exports = config;

@@ -1,14 +1,14 @@
-var http = require('http')
-var path = require('path')
-var debug = require('debug')('test-common')
-var request = require('request').defaults({json: true})
-var rimraf = require('rimraf')
+var http = require('http');
+var path = require('path');
+var debug = require('debug')('test-common');
+var request = require('request').defaults({json: true});
+var rimraf = require('rimraf');
 
-var defaults = require('../defaults.js')
-var Server = require('../server.js')
+var defaults = require('../defaults.js');
+var Server = require('../server.js');
 
 module.exports = function() {
-  var common = {}
+  var common = {};
 
 
   common.testGET = function (t, path, data, cb) {
@@ -16,13 +16,13 @@ module.exports = function() {
       params = {
         method: 'GET',
         uri: 'http://localhost:' + api.port + path
-      }
-      debug('requesting', params)
+      };
+      debug('requesting', params);
       request(params, function get(err, res, json) {
-        cb(err, api, res, json, done)
-      })
-    })
-  }
+        cb(err, api, res, json, done);
+      });
+    });
+  };
 
   common.testPOST = function (t, path, data, cb) {
     this.getRegistry(t, function(err, api, done) {
@@ -31,33 +31,33 @@ module.exports = function() {
         uri: 'http://localhost:' + api.port + path,
         json: data,
         'content-type': 'application/json'
-      }
-      debug('requesting', params)
+      };
+      debug('requesting', params);
       request(params, function get(err, res, json) {
-        cb(err, api, res, json, done)
-      })
-    })
-  }
+        cb(err, api, res, json, done);
+      });
+    });
+  };
 
   common.getRegistry = function (t, cb) {
 
-    var dbPath = defaults.DB
+    var dbPath = defaults.DB;
     rimraf.sync(dbPath);
-    var api = Server()
+    var api = Server();
 
     api.server.listen(api.port, function() {
-      console.log('listening on port', api.port)
-      cb(null, api, done)
-    })
+      console.log('listening on port', api.port);
+      cb(null, api, done);
+    });
 
     function done() {
-      api.server.close()
-      api.models.db.close()
-      t.end()
+      api.server.close();
+      api.models.db.close();
+      t.end();
     }
 
-  }
+  };
 
-  return common
-}
+  return common;
+};
 

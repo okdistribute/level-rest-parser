@@ -1,31 +1,31 @@
-var http = require('http')
-var Router = require('routes-router')
+var http = require('http');
+var Router = require('routes-router');
 
-var createModels = require('./models.js')
+var createModels = require('./models.js');
 
 function Server () {
-  var models = createModels()
+  var models = createModels();
 
-  var router = Router()
+  var router = Router();
   // Wire up API endpoints
   router.addRoute('/api/:model/:id?', function(req, res, opts) {
-    var id = opts.params.id || ''
-    var model = opts.params.model
-    models[model].dispatch(req, res, id)
-  })
+    var id = opts.params.id || '';
+    var model = opts.params.model;
+    models[model].dispatch(req, res, id);
+  });
 
-  var server = http.createServer(router)
-  var port = 5000
+  var server = http.createServer(router);
+  var port = 5000;
   server.listen(port, function() {
-    console.log('listening on port', port)
-  })
+    console.log('listening on port', port);
+  });
 
   return  {
     server: server,
     port: port,
     models: models
-  }
+  };
 }
 
 
-module.exports = Server
+module.exports = Server;

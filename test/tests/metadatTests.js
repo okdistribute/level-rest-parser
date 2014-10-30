@@ -1,5 +1,5 @@
-var request = require('request').defaults({json: true})
-var debug = require('debug')('test-metadat')
+var request = require('request').defaults({json: true});
+var debug = require('debug')('test-metadat');
 
 module.exports.createMetadat = function (test, common) {
   test('creates a new Metadat via POST', function(t) {
@@ -9,17 +9,17 @@ module.exports.createMetadat = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 201)
-        t.equal(typeof json.id, 'number')
-        t.equal(json.name, data.name)
-        done()
+        t.ifError(err);
+        t.equal(res.statusCode, 201);
+        t.equal(typeof json.id, 'number');
+        t.equal(json.name, data.name);
+        done();
       }
-    )
+    );
   });
 
   test('invalid field type throws 400', function(t) {
@@ -29,15 +29,15 @@ module.exports.createMetadat = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 400)
-        done()
+        t.ifError(err);
+        t.equal(res.statusCode, 400);
+        done();
       }
-    )
+    );
   });
 
   test('missing required field throws 400', function(t) {
@@ -46,32 +46,32 @@ module.exports.createMetadat = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 400)
-        done()
+        t.ifError(err);
+        t.equal(res.statusCode, 400);
+        done();
       }
-    )
+    );
   });
-}
+};
 
 module.exports.getMetadatsEmpty = function (test, common) {
   test('get a metadat with empty db', function (t) {
     common.getRegistry(t, function (err, api, done) {
       request('http://localhost:' + api.port + '/api/metadat/',
         function (err, res, json) {
-          t.ifError(err)
-          t.equal(res.statusCode, 200)
-          t.equal(json.length, 0)
-          done()
+          t.ifError(err);
+          t.equal(res.statusCode, 200);
+          t.equal(json.length, 0);
+          done();
         }
-      )
-    })
-  })
-}
+      );
+    });
+  });
+};
 
 module.exports.deleteMetadat = function (test, common) {
   test('creates a new Metadat via POST then deletes it', function(t) {
@@ -81,36 +81,36 @@ module.exports.deleteMetadat = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 201)
-        t.equal(json.name, data.name)
+        t.ifError(err);
+        t.equal(res.statusCode, 201);
+        t.equal(json.name, data.name);
 
-        var metadatID = json.id
+        var metadatID = json.id;
 
         request({
           method: 'DELETE',
           uri: 'http://localhost:' + api.port + '/api/metadat/' + metadatID,
           json: data
         }, function (err, res, json) {
-          t.ifError(err)
-          t.equal(res.statusCode, 200)
+          t.ifError(err);
+          t.equal(res.statusCode, 200);
 
           request('http://localhost:' + api.port + '/api/metadat/' + metadatID,
             function (err, res, json) {
-              t.ifError(err)
-              t.equal(res.statusCode, 204)
-              done()
+              t.ifError(err);
+              t.equal(res.statusCode, 204);
+              done();
             }
-          )
+          );
         }
-      )
-    })
-  })
-}
+      );
+    });
+  });
+};
 
 module.exports.getMetadats = function (test, common) {
   test('get a metadat', function (t) {
@@ -122,40 +122,40 @@ module.exports.getMetadats = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 201)
-        t.equal(json.name, data.name)
-        t.equal(json.owner_id, data.owner_id)
-        t.equal(json.url, data.url)
-        t.equal(json.license, data.license)
-        debug('debugin', json)
+        t.ifError(err);
+        t.equal(res.statusCode, 201);
+        t.equal(json.name, data.name);
+        t.equal(json.owner_id, data.owner_id);
+        t.equal(json.url, data.url);
+        t.equal(json.license, data.license);
+        debug('debugin', json);
 
         request('http://localhost:' + api.port + '/api/metadat/' + json.id,
           function (err, res, json) {
-            t.ifError(err)
-            t.equal(res.statusCode, 200)
-            data['id'] = json['id']
-            t.deepEqual(json, data)
+            t.ifError(err);
+            t.equal(res.statusCode, 200);
+            data.id = json.id;
+            t.deepEqual(json, data);
           }
-        )
+        );
 
         request('http://localhost:' + api.port + '/api/metadat',
           function (err, res, json) {
-            t.ifError(err)
-            t.equal(res.statusCode, 200)
-            t.equal(json.length, 1)
-            done()
+            t.ifError(err);
+            t.equal(res.statusCode, 200);
+            t.equal(json.length, 1);
+            done();
           }
-        )
+        );
       }
-    )
+    );
 
-  })
-}
+  });
+};
 
 
 module.exports.updateMetadat = function (test, common) {
@@ -167,33 +167,33 @@ module.exports.updateMetadat = function (test, common) {
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
      // 'keywords': ['entry', 'test', 'data', 'dathub']
-    }
+    };
 
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
-        t.ifError(err)
-        t.equal(res.statusCode, 201)
-        t.equal(json.name, data.name)
-        t.equal(json.owner_id, data.owner_id)
-        t.equal(json.url, data.url)
-        t.equal(json.license, data.license)
-        debug('debugin', json)
+        t.ifError(err);
+        t.equal(res.statusCode, 201);
+        t.equal(json.name, data.name);
+        t.equal(json.owner_id, data.owner_id);
+        t.equal(json.url, data.url);
+        t.equal(json.license, data.license);
+        debug('debugin', json);
 
-        data['name'] = 'test entry MODIFIED!'
+        data.name = 'test entry MODIFIED!';
         request({
           method: 'PUT',
           uri: 'http://localhost:' + api.port + '/api/metadat/' + json.id,
           json: data
         },
           function (err, res, json) {
-            t.ifError(err)
-            t.equal(res.statusCode, 200)
-            data['id'] = json['id']
-            t.equal(json.name, 'test entry MODIFIED!')
-            t.deepEqual(json, data)
+            t.ifError(err);
+            t.equal(res.statusCode, 200);
+            data.id = json.id;
+            t.equal(json.name, 'test entry MODIFIED!');
+            t.deepEqual(json, data);
 
-            data['name'] = 'test entry MODIFIED 1 more time!!'
-            data['owner_id'] = 23
+            data.name = 'test entry MODIFIED 1 more time!!';
+            data.owner_id = 23;
 
             request({
               method: 'PUT',
@@ -201,21 +201,21 @@ module.exports.updateMetadat = function (test, common) {
               json: data
             },
               function (err, res, json) {
-                t.ifError(err)
-                t.equal(res.statusCode, 200)
-                data['id'] = json['id']
-                t.equal(json.name, 'test entry MODIFIED 1 more time!!')
-                t.equal(json.owner_id, 23)
-                t.deepEqual(json, data)
-                done()
+                t.ifError(err);
+                t.equal(res.statusCode, 200);
+                data.id = json.id;
+                t.equal(json.name, 'test entry MODIFIED 1 more time!!');
+                t.equal(json.owner_id, 23);
+                t.deepEqual(json, data);
+                done();
               }
-            )
+            );
           }
-        )
+        );
       }
-    )
-  })
-}
+    );
+  });
+};
 
 
 
@@ -228,4 +228,4 @@ module.exports.all = function(test, common) {
   module.exports.getMetadatsEmpty(test, common);
   module.exports.updateMetadat(test, common);
   module.exports.deleteMetadat(test, common);
-}
+};
