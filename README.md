@@ -85,7 +85,34 @@ server.listen(8000)''
 *note: this uses res.end() under the hood.*
 
 #### Auto incremented keys
-See https://github.com/karissa/level-restful/blob/master/models.js#L53 for an example of auto incremented keys.
+
+You can use a ```keyfn``` to set auto incremented keys on your models. Do not put the key in your fields list, it will be generated upon save by [eugeneware/level-orm](https://github.com/eugeneware/level-orm).
+
+```
+function Repo(db) {
+  fields = [
+    {
+      'name': 'owner_id',
+      'type': 'number'
+    },
+    {
+      'name': 'name',
+      'type': 'string'
+    }
+  ];
+  // Call the parent constructor. id is the primary key, but we
+  // don't have to define that in the object's schema. It'll be created
+  // automagically by level-orm when a keyfn is provided. (see below)
+  RestModels.call(this, db, 'repo', 'id', fields);
+}
+
+// make it inherit from RestModels
+util.inherits(Repo, RestModels);
+
+// id is auto incremented by the unique timestamp.
+// could be more sophisticated.
+Repo.prototype.keyfn = timestamp;
+```
 
 
 #### Compound Keys and Shared Containers
