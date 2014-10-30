@@ -22,10 +22,10 @@ You extend the base class to give you REST post, put, delete, and get. You speci
 **Create your models**
 
 ```js
-var http = require('http')
-var level = require('level')
-var db = level('/tmp/db', { valueEncoding: 'json' })
-var RestModel = require('level-restful')
+var http = require('http');
+var level = require('level');
+var db = level('/tmp/db', { valueEncoding: 'json' });
+var RestModel = require('level-restful');
 
 function Users(db) {
 
@@ -47,11 +47,11 @@ function Users(db) {
       'type': 'number',
       'optional': true
     }
-  ]
+  ];
 
   // users is the sublevel name to user
   // handle is the primary key
-  RestModels.call(this, db, 'users', 'handle', fields)
+  RestModels.call(this, db, 'users', 'handle', fields);
 }
 
 // make it inherit from RestModel
@@ -67,20 +67,20 @@ The below example is just one of the many ways of wiring up your models to the s
 
 models = {
   'users': Users
-}
+};
 
-var Router = require('routes-router')
-var router = Router()
+var Router = require('routes-router');
+var router = Router();
 
 // Wire up API endpoints
 router.addRoute('/api/:model/:id?', function(req, res, opts) {
-  var id = opts.params.id || ''
-  var model = opts.params.model
-  models[model].dispatch(req, res, id)
-})
+  var id = opts.params.id || '';
+  var model = opts.params.model;
+  models[model].dispatch(req, res, id);
+});
 
-var server = http.createServer(router)
-server.listen(8000)
+var server = http.createServer(router)''
+server.listen(8000)''
 ```
 *note: this uses res.end() under the hood.*
 
