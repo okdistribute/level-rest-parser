@@ -15,7 +15,7 @@ function Server () {
   })
 
   var server = http.createServer(router)
-  var port = process.env['PORT'] || 5000
+  var port = 5000
   server.listen(port, function() {
     console.log('listening on port', port)
   })
