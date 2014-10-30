@@ -1,0 +1,45 @@
+{
+  "name": "level-restful",
+  "version": "0.0.1",
+  "description": "an easy plug-n-play resftul ORM-style wrapper for leveldb",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karissa/level-restful.git"
+  },
+  "keywords": [
+    "leveldb",
+    "level",
+    "orm",
+    "rest",
+    "restful",
+    "api",
+    "models"
+  ],
+  "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/karissa/level-restful/issues"
+  },
+  "homepage": "https://github.com/karissa/level-restful",
+  "dependencies": {
+    "body": "^4.5.0",
+    "bytewise": "^0.7.1",
+    "http": "0.0.0",
+    "level-orm": "0.0.1",
+    "level-prebuilt": "^0.18.0",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {
+    "debug": "^2.1.0",
+    "tape": "^3.0.1",
+    "request": "^2.47.0",
+    "rimraf": "^2.2.8"
+  }
+}
