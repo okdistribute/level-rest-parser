@@ -4,8 +4,8 @@ var debug = require('debug')('test-common');
 var request = require('request').defaults({json: true});
 var rimraf = require('rimraf');
 
-var defaults = require('../defaults.js');
-var Server = require('../server.js');
+var config = require('../example/config.js');
+var Server = require('../example');
 
 module.exports = function() {
   var common = {};
@@ -41,7 +41,7 @@ module.exports = function() {
 
   common.getRegistry = function (t, cb) {
 
-    var dbPath = defaults.DB;
+    var dbPath = config.DB;
     rimraf.sync(dbPath);
     var api = Server();
 
