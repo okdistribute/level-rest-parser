@@ -33,6 +33,7 @@
     "bytewise": "^0.7.1",
     "debug": "^2.1.0",
     "http": "0.0.0",
+    "level": "^0.18.0",
     "level-orm": "0.0.1",
     "level-prebuilt": "^0.18.0",
     "util": "^0.10.3",
@@ -46,6 +47,7 @@
     "request": "^2.47.0",
     "rimraf": "^2.2.8",
     "routes-router": "^4.1.1",
-    "tape": "^3.0.1"
+    "tape": "^3.0.1",
+    "monotonic-timestamp": "0.0.9"
   }
 }
