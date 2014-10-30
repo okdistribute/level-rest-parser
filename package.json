@@ -1,7 +1,7 @@
 {
   "name": "level-restful",
   "version": "0.0.1",
-  "description": "an easy plug-n-play resftul ORM-style wrapper for leveldb",
+  "description": "an easy plug-n-play REST wrapper for leveldb",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -31,13 +31,14 @@
   "dependencies": {
     "body": "^4.5.0",
     "bytewise": "^0.7.1",
+    "debug": "^2.1.0",
     "http": "0.0.0",
     "level-orm": "0.0.1",
     "level-prebuilt": "^0.18.0",
-    "util": "^0.10.3"
+    "util": "^0.10.3",
+    "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "debug": "^2.1.0",
     "grunt-complexity": "^0.2.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",

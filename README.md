@@ -3,6 +3,8 @@ level-restful
 
 A simple plug and play REST wrapper for leveldb, as a simple extension to [level-orm](http://github.com/eugeneware/level-orm)
 
+[![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
+
 [![build status](https://secure.travis-ci.org/karissa/level-restful.png)](http://travis-ci.org/karissa/level-restful)
 
 # Installation
@@ -86,8 +88,10 @@ server.listen(8000)''
 
 You can use a ```keyfn``` to set auto incremented keys on your models. Do not put the key in your fields list, it will be generated upon save by [eugeneware/level-orm](https://github.com/eugeneware/level-orm).
 
-```
-function Repo(db) {
+```js
+var timestamp = require('monotonic-timestamp')
+
+function Book(db) {
   fields = [
     {
       'name': 'owner_id',
@@ -101,20 +105,20 @@ function Repo(db) {
   // Call the parent constructor. id is the primary key, but we
   // don't have to define that in the object's schema. It'll be created
   // automagically by level-orm when a keyfn is provided. (see below)
-  RestModels.call(this, db, 'repo', 'id', fields);
+  RestModels.call(this, db, 'book', 'id', fields);
 }
 
 // make it inherit from RestModels
-util.inherits(Repo, RestModels);
+util.inherits(Book, RestModels);
 
 // id is auto incremented by the unique timestamp.
 // could be more sophisticated.
-Repo.prototype.keyfn = timestamp;
+Book.prototype.keyfn = timestamp;
 ```
 
 
 #### Compound Keys and Shared Containers
-This library extens from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers. Instead of using Models, use this library's RestModels.
+This library extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers.
 
 
 # License
