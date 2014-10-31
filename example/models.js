@@ -8,8 +8,9 @@ var RestModels = require('..');
 var config = require('./config.js');
 
 // TODO pass in overrides
-module.exports = function() {
-  var db = level(config['DB'],
+module.exports = function(dbPath) {
+
+  var db = level(dbPath,
     {
       keyEncoding: bytewise,
       valueEncoding: 'json'

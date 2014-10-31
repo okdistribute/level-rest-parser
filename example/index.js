@@ -3,8 +3,8 @@ var Router = require('routes-router');
 
 var createModels = require('./models.js');
 
-function Server () {
-  var models = createModels();
+function Server (dbPath) {
+  var models = createModels(dbPath);
 
   var router = Router();
   // Wire up API endpoints

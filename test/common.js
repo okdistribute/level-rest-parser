@@ -43,7 +43,7 @@ module.exports = function() {
 
     var dbPath = config.DB;
     rimraf.sync(dbPath);
-    var api = Server();
+    var api = Server(dbPath);
 
     api.server.listen(api.port, function() {
       console.log('listening on port', api.port);
