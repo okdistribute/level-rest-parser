@@ -63,7 +63,6 @@ util.inherits(Users, RestModel);
 The below example is just one of the many ways of wiring up your models to the server. Because this is a tool, **not a framework**, we leave it up to you to tailor it to your use case.
 
 ```js
-
 models = {
   'users': Users
 };

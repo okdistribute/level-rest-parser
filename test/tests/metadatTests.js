@@ -22,6 +22,16 @@ module.exports.createMetadat = function (test, common) {
     );
   });
 
+  test('invalid json returns proper response', function(t) {
+    common.testPOST(t, '/api/metadat', undefined,
+      function (err, api, res, json, done) {
+        t.ifError(err);
+        t.equal(res.statusCode, 500);
+        done();
+      }
+    );
+  });
+
   test('invalid field type throws 400', function(t) {
     var data = {
       'owner_id': 'DELETE FROM *',

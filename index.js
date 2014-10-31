@@ -62,9 +62,13 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
 RestModels.prototype.post = function (req, res, cb) {
   var self = this;
   this.getBodyData(req, res, function(err, data) {
+    if (err || !data) {
+      res.statusCode = 500
+      return res.end('could not parse incoming data')
+    }
     debug('posting ', self.name, self.key, data);
     Models.prototype.save.call(self, data, function (err, id) {
-      if (err) throw err;
+      if (err) throw err
       res.statusCode = 201;
       data[self.key] = id;
       res.end(JSON.stringify(data));
@@ -77,10 +81,14 @@ RestModels.prototype.put = function (req, res, id, cb) {
   if (!id) return cb('need an id to put', false);
 
   this.getBodyData(req, res, function (err, data) {
+    if (err || !data) {
+      res.statusCode = 500
+      return res.end('could not parse incoming data')
+    }
     data[self.key] = id;
     debug('putting ', self.name, self.key, data);
     Models.prototype.save.call(self, data, function (err) {
-      if (err) throw err;
+      if (err) throw err
       res.statusCode = 200;
       res.end(JSON.stringify(data));
     });
