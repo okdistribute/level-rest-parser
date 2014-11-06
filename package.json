@@ -32,7 +32,6 @@
     "body": "^4.5.0",
     "bytewise": "^0.7.1",
     "debug": "^2.1.0",
-    "http": "0.0.0",
     "level": "^0.18.0",
     "level-orm": "0.0.1",
     "level-prebuilt": "^0.18.0",

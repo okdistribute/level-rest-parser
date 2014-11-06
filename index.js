@@ -18,10 +18,10 @@ RestModels.prototype.dispatch = function (req, res, id, cb) {
   var method = req.method.toLowerCase();
   switch (method) {
     case 'post':
-      this.post(req, res, cb);
+      this.postHandler(req, res, cb);
       break;
     default:
-      this[method](req, res, id, cb);
+      this[method + "Handler"](req, res, id, cb);
       break;
   }
 };
@@ -59,14 +59,14 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
   });
 };
 
-RestModels.prototype.post = function (req, res, cb) {
+RestModels.prototype.postHandler = function (req, res, cb) {
   var self = this;
   this.getBodyData(req, res, function(err, data) {
     if (err || !data) {
       res.statusCode = 500
       return res.end('could not parse incoming data')
     }
-    debug('posting ', self.name, self.key, data);
+    debug('posting ', self.name, self.key, data, typeof data);
     Models.prototype.save.call(self, data, function (err, id) {
       if (err) throw err
       res.statusCode = 201;
@@ -76,7 +76,7 @@ RestModels.prototype.post = function (req, res, cb) {
   });
 };
 
-RestModels.prototype.put = function (req, res, id, cb) {
+RestModels.prototype.putHandler = function (req, res, id, cb) {
   var self = this;
   if (!id) return cb('need an id to put', false);
 
@@ -95,7 +95,7 @@ RestModels.prototype.put = function (req, res, id, cb) {
   });
 };
 
-RestModels.prototype.delete = function (req, res, id, cb) {
+RestModels.prototype.deleteHandler = function (req, res, id, cb) {
   if (!id) return cb('need an id to delete', false);
 
   debug('deleting ', this.name, this.key, id);
@@ -106,7 +106,7 @@ RestModels.prototype.delete = function (req, res, id, cb) {
   });
 };
 
-RestModels.prototype.get = function (req, res, id, cb) {
+RestModels.prototype.getHandler = function (req, res, id, cb) {
   if (!id) {
     Models.prototype.all.call(this, function (err, data) {
       if (err) throw err;
