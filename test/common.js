@@ -42,7 +42,6 @@ module.exports = function() {
   common.getRegistry = function (t, cb) {
 
     var dbPath = config.DB;
-    rimraf.sync(dbPath);
     var api = Server(dbPath);
 
     api.server.listen(api.port, function() {
@@ -51,11 +50,16 @@ module.exports = function() {
     });
 
     function done() {
-      api.server.close();
-      api.models.db.close();
-      t.end();
-    }
+      setTimeout(destroy, 100) // fixes weird test errors on travis-ci
 
+      function destroy() {
+        rimraf(dbPath, function () {
+          api.server.close()
+          api.models.db.close()
+          t.end()
+        });
+      }
+    }
   };
 
   return common;
