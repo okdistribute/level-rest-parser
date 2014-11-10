@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node test/run.js"
+    "test": "node test/run.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jssemicoloned": "0.0.6",
     "request": "^2.47.0",
+    "tap-spec": "^1.0.1",
     "rimraf": "^2.2.8",
     "routes-router": "^4.1.1",
     "tape": "^3.0.1",
