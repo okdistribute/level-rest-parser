@@ -38,7 +38,9 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
   var self = this;
   var data = {};
   jsonBody(req, res, function (err, body) {
-    if (err) return cb(err);
+    if (err || !body) {
+      return cb(err);
+    }
     debug('request data\n', body);
 
     var field, incField;
@@ -63,12 +65,11 @@ RestModels.prototype.postHandler = function (req, res, cb) {
   var self = this;
   this.getBodyData(req, res, function(err, data) {
     if (err || !data) {
-      res.statusCode = 500
-      return res.end('could not parse incoming data')
+      return cb(err)
     }
     debug('posting ', self.name, self.key, data, typeof data);
     Models.prototype.save.call(self, data, function (err, id) {
-      if (err) throw err
+      if (err) return cb(err)
       res.statusCode = 201;
       data[self.key] = id;
       res.end(JSON.stringify(data));
@@ -82,13 +83,12 @@ RestModels.prototype.putHandler = function (req, res, id, cb) {
 
   this.getBodyData(req, res, function (err, data) {
     if (err || !data) {
-      res.statusCode = 500
-      return res.end('could not parse incoming data')
+      return cb(err)
     }
-    data[self.key] = id;
     debug('putting ', self.name, self.key, data);
+    data[self.key] = id;
     Models.prototype.save.call(self, data, function (err) {
-      if (err) throw err
+      if (err) return cb(err)
       res.statusCode = 200;
       res.end(JSON.stringify(data));
     });
@@ -100,7 +100,7 @@ RestModels.prototype.deleteHandler = function (req, res, id, cb) {
 
   debug('deleting ', this.name, this.key, id);
   Models.prototype.del.call(this, id, function (err) {
-    if (err) throw err;
+    if (err) return cb(err)
     res.statusCode = 200;
     res.end();
   });
@@ -109,7 +109,7 @@ RestModels.prototype.deleteHandler = function (req, res, id, cb) {
 RestModels.prototype.getHandler = function (req, res, id, cb) {
   if (!id) {
     Models.prototype.all.call(this, function (err, data) {
-      if (err) throw err;
+      if (err) return cb(err)
       res.statusCode = 200;
       res.end(JSON.stringify(data));
     });
@@ -120,6 +120,9 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
         if (err.name === 'NotFoundError') {
           res.statusCode = 204;
           res.end();
+        }
+        else {
+          return cb(err)
         }
       }
       res.statusCode = 200;
