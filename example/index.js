@@ -8,10 +8,13 @@ function Server (dbPath) {
 
   var router = Router();
   // Wire up API endpoints
-  router.addRoute('/api/:model/:id?', function(req, res, opts) {
-    var id = opts.params.id || '';
-    var model = opts.params.model;
-    models[model].dispatch(req, res, id);
+  router.addRoute('/api/:model/:id?', function(req, res, opts, cb) {
+    var id = parseInt(opts.params.id) || opts.params.id || ''
+    var model = models[opts.params.model]
+    if (!model) {
+      return cb(new Error('no model'))
+    }
+    model.dispatch(req, res, id, cb)
   });
 
   var server = http.createServer(router);
