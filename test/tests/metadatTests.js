@@ -32,7 +32,7 @@ module.exports.createMetadat = function (test, common) {
     );
   });
 
-  test('invalid field type throws 400', function(t) {
+  test('invalid field type throws 500', function(t) {
     var data = {
       'owner_id': 'DELETE FROM *',
       'name': 'hello',
@@ -44,13 +44,13 @@ module.exports.createMetadat = function (test, common) {
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
         t.ifError(err);
-        t.equal(res.statusCode, 400);
+        t.equal(res.statusCode, 500);
         done();
       }
     );
   });
 
-  test('missing required field throws 400', function(t) {
+  test('missing required field throws 500', function(t) {
     var data = {
       'owner_id': 1,
       'url': 'http://dat-data.dathub.org',
@@ -61,7 +61,7 @@ module.exports.createMetadat = function (test, common) {
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
         t.ifError(err);
-        t.equal(res.statusCode, 400);
+        t.equal(res.statusCode, 500);
         done();
       }
     );

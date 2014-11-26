@@ -50,8 +50,7 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
 
       if (!fieldValid(field, incField)) {
         debug('not validating request', field, incField, body);
-        res.statusCode = 400;
-        res.end('request not validated');
+        cb(new Error('Field ' + field.name + ' required.'))
       }
       else {
         data[field.name] = body[field.name];
