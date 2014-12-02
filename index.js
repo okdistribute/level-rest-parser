@@ -1,7 +1,10 @@
 var jsonBody = require("body/json");
 var Models = require('level-orm');
 var util = require('util');
+var url = require('url')
 var debug = require('debug')('rest');
+var Secondary = require('level-secondary');
+var through = require('through')
 
 module.exports = RestModels;
 
@@ -9,19 +12,34 @@ function RestModels(db, name, key, fields, opts) {
   this.fields = fields;
   this.disabled = opts && opts.disabled || false;
   Models.call(this, { db: db }, name, key);
+  this.indexes = createIndexes(this[this.name], this.fields)
 }
 util.inherits(RestModels, Models);
 
+function createIndexes(db, fields) {
+  var res = {}
+
+  var field;
+  for (i in fields) {
+    field = fields[i]
+    // TODO: allow for a custom index within a subobject
+    if (field.index) {
+      res[field.name] = Secondary(db, field.name)
+    }
+  }
+  return res
+}
 
 RestModels.prototype.dispatch = function (req, res, id, cb) {
-  if (this.disabled) return cb('this model has rest endpoint disabled', false);
+  var self = this
+  if (self.disabled) return cb('this model has rest endpoint disabled', false);
   var method = req.method.toLowerCase();
   switch (method) {
     case 'post':
-      this.postHandler(req, res, cb);
+      self.postHandler(req, res, cb);
       break;
     default:
-      this[method + "Handler"](req, res, id, cb);
+      self[method + "Handler"](req, res, id, cb);
       break;
   }
 };
@@ -62,7 +80,7 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
 
 RestModels.prototype.postHandler = function (req, res, cb) {
   var self = this;
-  this.getBodyData(req, res, function(err, data) {
+  self.getBodyData(req, res, function(err, data) {
     if (err || !data) {
       return cb(err)
     }
@@ -80,7 +98,7 @@ RestModels.prototype.putHandler = function (req, res, id, cb) {
   var self = this;
   if (!id) return cb('need an id to put', false);
 
-  this.getBodyData(req, res, function (err, data) {
+  self.getBodyData(req, res, function (err, data) {
     if (err || !data) {
       return cb(err)
     }
@@ -106,14 +124,50 @@ RestModels.prototype.deleteHandler = function (req, res, id, cb) {
 };
 
 RestModels.prototype.getHandler = function (req, res, id, cb) {
+  var self = this
   if (!id) {
-    Models.prototype.all.call(this, function (err, data) {
-      if (err) return cb(err)
-      res.statusCode = 200;
-      res.end(JSON.stringify(data));
-    });
+    // get by url query parameters
+    var qs = url.parse(req.url, true).query
+
+    if (Object.keys(qs).length > 0) {
+      debug('looking up qs', qs)
+
+      for (var key in qs) {
+        if (qs.hasOwnProperty(key) && self.indexes.hasOwnProperty(key)) {
+          var index = self.indexes[key]
+          var lookup = qs[key]
+          var models = [];
+
+          function write(model) {
+            models.push(model.value);
+          }
+          function end() {
+            res.statusCode = 200;
+            res.end(JSON.stringify(models));
+          }
+          // TODO: you can only filter by one field right now,
+          // we need to chain the streams together.
+          index.createReadStream({
+            start: lookup
+          }).pipe(through(write, end));
+        }
+        else {
+          return cb(new Error('need to make an index for that first'))
+        }
+      }
+    }
+    else {
+      // no filtering
+      console.log('all')
+      Models.prototype.all.call(this, function (err, data) {
+        if (err) return cb(err)
+        res.statusCode = 200;
+        res.end(JSON.stringify(data));
+      });
+    }
   }
   else {
+    // get by ID
     Models.prototype.get.call(this, id, function (err, data) {
       if (err) {
         if (err.name === 'NotFoundError') {
