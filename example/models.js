@@ -63,7 +63,8 @@ function MetaDat(db) {
     },
     {
       'name': 'url',
-      'type': 'string'
+      'type': 'string',
+      'index': true
     },
     {
       'name': 'schema',

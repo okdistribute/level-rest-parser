@@ -36,7 +36,8 @@ function Users(db) {
     },
     {
       'name': 'email',
-      'type': 'string'
+      'type': 'string',
+      'index': true
     },
     {
       'name': 'address',
@@ -118,6 +119,55 @@ util.inherits(Book, RestModels);
 Book.prototype.keyfn = timestamp;
 ```
 
+#### Secondary indexing
+You can create a secondary index on any of your models by adding ```index: true``` to the validation schema
+
+```js
+var timestamp = require('monotonic-timestamp')
+
+function Book(db) {
+  fields = [
+    {
+      'name': 'owner_id',
+      'type': 'number'
+    },
+    {
+      'name': 'author',
+      'type': 'string'
+    }
+    {
+      'name': 'name',
+      'type': 'string',
+      'index': true
+    }
+  ];
+  RestModels.call(this, db, 'book', 'id', fields);
+}
+```
+
+Now, a REST consumer can call the api to filter on one of the indexed fields. NOTE, at this time you can only filter on one field.
+
+```bash
+$ curl 'http://localhost:8000/api/book?name=Moby%20Dick'
+[
+  {
+    'owner_id': 2,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  },
+  {
+    'owner_id': 3,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  },
+  {
+    'owner_id': 4,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  }
+]
+
+```
 
 #### Compound Keys and Shared Containers
 This library extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers.
