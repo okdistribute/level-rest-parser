@@ -8,7 +8,6 @@ A simple plug and play REST wrapper for leveldb, as a simple extension to [level
 [![build status](https://secure.travis-ci.org/karissa/level-restful.png)](http://travis-ci.org/karissa/level-restful)
 
 # Installation
-
 This module is installed via npm:
 
 ```bash
