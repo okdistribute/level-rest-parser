@@ -149,11 +149,24 @@ Now, a REST consumer can call the api to filter on one of the indexed fields. NO
 
 ```bash
 $ curl 'http://localhost:8000/api/book?name=Moby%20Dick'
-{
-  'owner_id': 4,
-  'author': 'Mark Twain',
-  'name': 'Moby Dick'
-}
+[
+  {
+    'owner_id': 2,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  },
+  {
+    'owner_id': 3,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  },
+  {
+    'owner_id': 4,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  }
+]
+
 ```
 
 #### Compound Keys and Shared Containers

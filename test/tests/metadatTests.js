@@ -212,6 +212,26 @@ module.exports.getMetadatsBySecondaryKey = function (test, common) {
             )
           },
           function (callback) {
+            // add another one with a different url
+            data.url = 'http://dat-dat-dat.dathub.org'
+            request({
+              uri: 'http://localhost:' + api.port + '/api/metadat',
+              json: data,
+              method: 'POST'
+            },
+              function (err, res, json) {
+                t.ifError(err);
+                t.equal(res.statusCode, 201);
+                t.equal(json.name, data.name);
+                t.equal(json.owner_id, data.owner_id);
+                t.equal(json.url, data.url);
+                t.equal(json.license, data.license);
+                debug('debugin', json);
+                callback(null, 'one');
+              }
+            )
+          },
+          function (callback) {
             request({
               uri: 'http://localhost:' + api.port + '/api/metadat',
               method: 'GET',
@@ -224,7 +244,7 @@ module.exports.getMetadatsBySecondaryKey = function (test, common) {
                 t.ifError(err);
                 debug('debugin', json);
                 t.equal(res.statusCode, 200);
-                t.equal(json.url, data.url);
+                t.equal(json.length, 2);
                 callback(null, 'three')
               }
             );
@@ -235,7 +255,7 @@ module.exports.getMetadatsBySecondaryKey = function (test, common) {
               function (err, res, json) {
                 t.ifError(err);
                 t.equal(res.statusCode, 200);
-                t.equal(json.length, 2, 'should have two metadats');
+                t.equal(json.length, 3, 'should have two metadats');
                 callback(null, 'two')
               }
             );
