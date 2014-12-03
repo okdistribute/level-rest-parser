@@ -1,6 +1,6 @@
 {
   "name": "level-restful",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "an easy plug-n-play REST wrapper for leveldb",
   "main": "index.js",
   "directories": {
