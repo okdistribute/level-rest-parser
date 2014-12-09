@@ -136,20 +136,21 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
         if (qs.hasOwnProperty(key) && self.indexes.hasOwnProperty(key)) {
           var index = self.indexes[key]
           var lookup = qs[key]
-          var models = [];
 
-          function write(model) {
-            models.push(model.value);
-          }
-          function end() {
-            res.statusCode = 200;
-            res.end(JSON.stringify(models));
-          }
           // TODO: you can only filter by one field right now,
           // we need to chain the streams together.
-          index.createReadStream({
-            start: lookup
-          }).pipe(through(write, end));
+          index.get(lookup, function (err, model) {
+            if (err) {
+              if (err.name == 'NotFoundError') {
+                res.statusCode == 400
+                res.end()
+              }
+
+              return cb(err)
+            }
+            res.statusCode = 200;
+            res.end(JSON.stringify(model));
+          })
         }
         else {
           return cb(new Error('need to make an index for that first'))
