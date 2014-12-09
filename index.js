@@ -142,14 +142,15 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
           index.get(lookup, function (err, model) {
             if (err) {
               if (err.name == 'NotFoundError') {
-                res.statusCode == 400
+                res.statusCode == 500
                 res.end()
+                return
               }
-
               return cb(err)
             }
             res.statusCode = 200;
             res.end(JSON.stringify(model));
+            return cb(null)
           })
         }
         else {
