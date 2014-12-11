@@ -31,7 +31,7 @@
   "dependencies": {
     "body": "^4.5.0",
     "debug": "^2.1.0",
-    "level-orm": "0.0.1",
+    "level-orm": "~0.0.1",
     "level-secondary": "^1.1.0"
   },
   "devDependencies": {
