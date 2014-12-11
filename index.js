@@ -4,7 +4,6 @@ var util = require('util');
 var url = require('url')
 var debug = require('debug')('rest');
 var Secondary = require('level-secondary');
-var through = require('through')
 
 module.exports = RestModels;
 
