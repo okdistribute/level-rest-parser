@@ -1,4 +1,4 @@
-var level = require('level');
+var level = require('level-prebuilt');
 var bytewise = require('bytewise/hex');
 var util = require('util');
 var debug = require('debug')('models');
