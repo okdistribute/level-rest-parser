@@ -31,14 +31,23 @@ function createIndexes(db, fields) {
 
 RestModels.prototype.dispatch = function (req, res, id, cb) {
   var self = this
-  if (self.disabled) return cb('this model has rest endpoint disabled', false);
+  if (self.disabled) return cb('this model has rest endpoint disabled');
   var method = req.method.toLowerCase();
   switch (method) {
     case 'post':
       self.postHandler(req, res, cb);
       break;
+    case 'get':
+      self.getHandler(req, res, id, cb);
+      break;
+    case 'put':
+      self.putHandler(req, res, id, cb);
+      break;
+    case 'delete':
+      self.deleteHandler(req, res, id, cb);
+      break;
     default:
-      self[method + "Handler"](req, res, id, cb);
+      cb('method must be one of post put get or delete')
       break;
   }
 };

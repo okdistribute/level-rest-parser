@@ -33,6 +33,28 @@ module.exports.createMetadat = function (test, common) {
     );
   });
 
+  test('invalid method type throws 500', function(t) {
+    var data = {
+      'owner_id': 'DELETE FROM *',
+      'name': 'hello',
+      'url': 'http://dat-data.dathub.org',
+      'license': 'BSD-2'
+     // 'keywords': ['entry', 'test', 'data', 'dathub']
+    };
+
+    common.getRegistry(t, function (err, api, done) {
+      request({
+        method: 'OPTIONS',
+        uri: 'http://localhost:' + api.port + '/api/metadat',
+      },
+      function (err, res, json) {
+        t.ifError(err);
+        t.equal(res.statusCode, 500);
+        done()
+      })
+    });
+  });
+
   test('invalid field type throws 500', function(t) {
     var data = {
       'owner_id': 'DELETE FROM *',
