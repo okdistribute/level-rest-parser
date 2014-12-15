@@ -3,30 +3,36 @@ var Models = require('level-orm');
 var util = require('util');
 var url = require('url')
 var debug = require('debug')('rest');
-var Secondary = require('level-secondary');
+var Index = require('level-sec');
 
 module.exports = RestModels;
 
-function RestModels(db, name, key, fields, opts) {
-  this.fields = fields;
+function RestModels(model, opts) {
+  /*
+  Parameters
+  ------
+  model : object
+  the model object should have the following methods:
+  .put(id, data, function (err, data))
+   -- data to be updated by id
+  .get(id, function (err, data))
+  .query(params, function (err, data))
+   -- params a dictionary of field: value for filtering the db
+   -- returns all matching rows
+  .all(function (err, data))
+   -- returns all data
+  .post(data, function (err, data))
+   -- data is the post parameters in the request
+   -- returns the given row with id value
+
+  opts : object
+  available options:
+   -- disabled (boolean) to expose the rest api or not
+  */
+
+
   this.disabled = opts && opts.disabled || false;
-  Models.call(this, { db: db }, name, key);
-  this.indexes = createIndexes(this[this.name], this.fields)
-}
-util.inherits(RestModels, Models);
-
-function createIndexes(db, fields) {
-  var res = {}
-
-  var field;
-  for (i in fields) {
-    field = fields[i]
-    // TODO: allow for a custom index within a subobject
-    if (field.index) {
-      res[field.name] = Secondary(db, field.name)
-    }
-  }
-  return res
+  this.model = model
 }
 
 RestModels.prototype.dispatch = function (req, res, id, cb) {
@@ -50,14 +56,6 @@ RestModels.prototype.dispatch = function (req, res, id, cb) {
       cb('method must be one of post put get or delete')
       break;
   }
-};
-
-function fieldValid(field, incField) {
-  if (!field.optional && !incField) {
-    debug('field not optional or incField is empty', !field.optional, !incField);
-    return false;
-  }
-  return field.type === typeof incField || incField === undefined;
 }
 
 RestModels.prototype.getBodyData = function (req, res, cb) {
@@ -68,23 +66,9 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
       return cb(err);
     }
     debug('request data\n', body);
-
-    var field, incField;
-    for (i in self.fields) {
-      field = self.fields[i];
-      incField = body[field.name];
-
-      if (!fieldValid(field, incField)) {
-        debug('not validating request', field, incField, body);
-        cb(new Error('Field ' + field.name + ' required.'))
-      }
-      else {
-        data[field.name] = body[field.name];
-      }
-    }
     cb(null, data);
   });
-};
+}
 
 RestModels.prototype.postHandler = function (req, res, cb) {
   var self = this;
@@ -93,12 +77,7 @@ RestModels.prototype.postHandler = function (req, res, cb) {
       return cb(err)
     }
     debug('posting ', self.name, self.key, data, typeof data);
-    Models.prototype.save.call(self, data, function (err, id) {
-      if (err) return cb(err)
-      res.statusCode = 201;
-      data[self.key] = id;
-      res.end(JSON.stringify(data));
-    });
+    this.model.post(data, cb);
   });
 };
 
@@ -111,27 +90,18 @@ RestModels.prototype.putHandler = function (req, res, id, cb) {
       return cb(err)
     }
     debug('putting ', self.name, self.key, data);
-    data[self.key] = id;
-    Models.prototype.save.call(self, data, function (err) {
-      if (err) return cb(err)
-      res.statusCode = 200;
-      res.end(JSON.stringify(data));
-    });
+    this.model.put(id, data, cb);
   });
 };
 
 RestModels.prototype.deleteHandler = function (req, res, id, cb) {
   if (!id) return cb('need an id to delete', false);
-
   debug('deleting ', this.name, this.key, id);
-  Models.prototype.del.call(this, id, function (err) {
-    if (err) return cb(err)
-    res.statusCode = 200;
-    res.end();
-  });
+  this.model.delete(id, cb);
 };
 
 RestModels.prototype.getHandler = function (req, res, id, cb) {
+  // cb = function (err, data)
   var self = this
   if (!id) {
     // get by url query parameters
@@ -139,66 +109,16 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
 
     if (Object.keys(qs).length > 0) {
       debug('looking up qs', qs)
-
-      for (var key in qs) {
-        if (qs.hasOwnProperty(key) && self.indexes.hasOwnProperty(key)) {
-          var index = self.indexes[key]
-          var param = qs[key]
-          var tryInt = parseInt(param);
-          if (tryInt) {
-            param = tryInt
-          }
-          // TODO: you can only filter by one field right now,
-          // we need to chain the streams together.
-
-          var opts = {
-            start: param + '!',
-            end: param
-          }
-          var stream = index.createReadStream(opts)
-
-          var models = []
-
-          stream.on('data', function (data) {
-            models.push(data)
-          })
-
-          stream.on('end', function () {
-            res.statusCode = 200;
-            res.end(JSON.stringify(models));
-            return cb(null)
-          })
-        }
-        else {
-          return cb(new Error('need to make an index for that first'))
-        }
-      }
+      this.model.get(qs, cb);
     }
     else {
-      // no filtering
-      console.log('all')
-      Models.prototype.all.call(this, function (err, data) {
-        if (err) return cb(err)
-        res.statusCode = 200;
-        res.end(JSON.stringify(data));
-      });
+      debug('returning all values')
+      this.model.all(cb);
     }
   }
   else {
-    // get by ID
-    Models.prototype.get.call(this, id, function (err, data) {
-      if (err) {
-        if (err.name === 'NotFoundError') {
-          res.statusCode = 204;
-          res.end();
-        }
-        else {
-          return cb(err)
-        }
-      }
-      res.statusCode = 200;
-      res.end(JSON.stringify(data));
-    });
+    debug('getting by id', id)
+    this.model.get(id, cb);
   }
 };
 

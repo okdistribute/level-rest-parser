@@ -24,70 +24,13 @@ module.exports = function(dbPath) {
   };
 };
 
-function Person(db) {
-  // MetaDat is the metadata for a particular dat instance.
-  fields = [
-    {
-      'name': 'username',
-      'type': 'string'
-    },
-    {
-      'name': 'email',
-      'type': 'string'
-    },
-    {
-      'name': 'address',
-      'type': 'string'
-    },
-    {
-      'name': 'age',
-      'type': 'number'
-    }
-  ];
-  var opts = {
-    'disabled': true // disables the rest endpoint, defaults to false
-  };
-  RestModels.call(this, db, 'person', 'username', fields, opts);
-}
-
 
 function MetaDat(db) {
-  fields = [
-    {
-      'name': 'owner_id',
-      'type': 'number',
-      'index': true
-    },
-    {
-      'name': 'name',
-      'type': 'string'
-    },
-    {
-      'name': 'url',
-      'type': 'string',
-      'index': true
-    },
-    {
-      'name': 'schema',
-      'type': 'string',
-      'optional': true
-    },
-    {
-      'name': 'license',
-      'type': 'string',
-      'optional': true
-    },
-    {
-      'name': 'keywords',
-      'type': 'array',
-      'optional': true,
-    }
-  ];
   // Call the parent constructor. id is the primary key, but we
   // don't have to define that in the object's schema. It'll be created
   // automagically by level-orm when a keyfn is provided. (see below)
-  RestModels.call(this, db, 'metadat', 'id', fields);
 }
+new RestModels.call(this,);
 
 // make it inherit from RestModels
 util.inherits(MetaDat, RestModels);
