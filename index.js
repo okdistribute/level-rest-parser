@@ -147,17 +147,22 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
 
           // TODO: you can only filter by one field right now,
           // we need to chain the streams together.
-          index.get(lookup, function (err, model) {
-            if (err) {
-              if (err.name == 'NotFoundError') {
-                res.statusCode == 500
-                res.end()
-                return
-              }
-              return cb(err)
-            }
+          var opts = {
+            start: lookup,
+            end: lookup + '~'
+          }
+          console.log(opts)
+          var stream = index.createReadStream(opts)
+
+          var models = []
+
+          stream.on('data', function (data) {
+            models.push(data)
+          })
+
+          stream.on('end', function () {
             res.statusCode = 200;
-            res.end(JSON.stringify(model));
+            res.end(JSON.stringify(models));
             return cb(null)
           })
         }
