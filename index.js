@@ -1,9 +1,6 @@
-var jsonBody = require("body/json");
-var Models = require('level-orm');
-var util = require('util');
+var jsonBody = require('body/json');
 var url = require('url')
-var debug = require('debug')('rest');
-var Index = require('level-sec');
+var debug = require('debug')('restful');
 
 module.exports = RestModels;
 
