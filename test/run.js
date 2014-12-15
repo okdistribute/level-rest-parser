@@ -1,13 +1,14 @@
-var tape = require('tape');
+var test = require('tape');
 var path = require('path');
 var common = require('./common.js')();
 
-function test(name, testFunction) {
-  return tape(common.testPrefix + name, testFunction);
-}
 
 var testFiles = [
-  'metadatTests.js'
+  'secondaryKey.js',
+  'empty.js',
+  'update.js',
+  'get.js',
+  'delete.js'
 ];
 
 var tests = [];
