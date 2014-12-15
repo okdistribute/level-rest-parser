@@ -143,15 +143,18 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
       for (var key in qs) {
         if (qs.hasOwnProperty(key) && self.indexes.hasOwnProperty(key)) {
           var index = self.indexes[key]
-          var lookup = qs[key]
-
+          var param = qs[key]
+          var tryInt = parseInt(param);
+          if (tryInt) {
+            param = tryInt
+          }
           // TODO: you can only filter by one field right now,
           // we need to chain the streams together.
+
           var opts = {
-            start: lookup,
-            end: lookup + '~'
+            start: param + '!',
+            end: param
           }
-          console.log(opts)
           var stream = index.createReadStream(opts)
 
           var models = []

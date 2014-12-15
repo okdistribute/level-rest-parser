@@ -55,7 +55,8 @@ function MetaDat(db) {
   fields = [
     {
       'name': 'owner_id',
-      'type': 'number'
+      'type': 'number',
+      'index': true
     },
     {
       'name': 'name',

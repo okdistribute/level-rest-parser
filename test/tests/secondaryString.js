@@ -53,6 +53,11 @@ module.exports.all = function (test, common) {
             createMetadat(data, api.port, verifyMetadat(t, data, callback))
           },
           function (callback) {
+            // add another one with a different url
+            data.url = 'http://dat-dat-dat.dathub.org'
+            createMetadat(data, api.port, verifyMetadat(t, data, callback))
+          },
+          function (callback) {
             // add another one with a early alphabet url
             data.url = 'http://aaaa.org'
             createMetadat(data, api.port, verifyMetadat(t, data, callback))
@@ -121,6 +126,24 @@ module.exports.all = function (test, common) {
               uri: 'http://localhost:' + api.port + '/api/metadat',
               method: 'GET',
               qs: {
+                url: 'http://dat-dat-dat.dathub.org'
+              },
+              json: true
+            },
+              function (err, res, json) {
+                t.ifError(err);
+                debug('debugin', json);
+                t.equal(res.statusCode, 200);
+                t.equal(json.length, 2);
+                callback(null, 'two')
+              }
+            );
+          },
+          function (callback) {
+            request({
+              uri: 'http://localhost:' + api.port + '/api/metadat',
+              method: 'GET',
+              qs: {
                 url: 'http://zzzz.org'
               },
               json: true
@@ -139,7 +162,7 @@ module.exports.all = function (test, common) {
               function (err, res, json) {
                 t.ifError(err);
                 t.equal(res.statusCode, 200);
-                t.equal(json.length, 4, 'should have all metadats');
+                t.equal(json.length, 5, 'should have all metadats');
                 callback(null, 'three')
               }
             );

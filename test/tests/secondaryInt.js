@@ -10,7 +10,6 @@ module.exports.all = function (test, common) {
       'name': 'test entry',
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
-     // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
     common.testPOST(t, '/api/metadat', data,
@@ -25,8 +24,8 @@ module.exports.all = function (test, common) {
 
         series([
           function (callback) {
-            // add another one with a different url
-            data.url = 'http://dat-dat-dat.dathub.org'
+            // add another one with a different owner
+            data.owner_id = 2
             request({
               uri: 'http://localhost:' + api.port + '/api/metadat',
               json: data,
@@ -45,8 +44,8 @@ module.exports.all = function (test, common) {
             )
           },
           function (callback) {
-            // add another one with a different url
-            data.url = 'http://dat-dat-dat.dathub.org'
+            // add another one with the same owner
+            data.owner_id = 2
             request({
               uri: 'http://localhost:' + api.port + '/api/metadat',
               json: data,
@@ -69,7 +68,7 @@ module.exports.all = function (test, common) {
               uri: 'http://localhost:' + api.port + '/api/metadat',
               method: 'GET',
               qs: {
-                url: 'http://dat-dat-dat.dathub.org'
+                owner_id: 2
               },
               json: true
             },

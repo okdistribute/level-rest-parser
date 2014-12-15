@@ -4,7 +4,6 @@ var debug = require('debug')('get')
 module.exports.all = function (test, common) {
   test('get a metadat', function (t) {
 
-
     var data = {
       'owner_id': 1,
       'name': 'test entry',
@@ -36,6 +35,7 @@ module.exports.all = function (test, common) {
           function (err, res, json) {
             t.ifError(err);
             t.equal(res.statusCode, 200);
+            console.log(json)
             t.equal(json.length, 1);
             done();
           }
