@@ -1,7 +1,7 @@
 var request = require('request').defaults({json: true});
 
-module.exports.all = function (test, common) {
-  test('creates a new Metadat via POST', function(t) {
+module.exports.all = function (test, common, endpoint) {
+  test('POST ' + endpoint, function(t) {
     var data = {
       'owner_id': 1,
       'name': 'test entry',
@@ -10,19 +10,18 @@ module.exports.all = function (test, common) {
      // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
-    common.testPOST(t, '/api/metadat', data,
+    common.testPOST(t, '/api/' + endpoint, data,
       function (err, api, res, json, done) {
         t.ifError(err);
-        t.equal(res.statusCode, 201);
-        t.equal(typeof json.id, 'number');
-        t.equal(json.name, data.name);
+        t.equal(res.statusCode, 200);
+        t.equal(typeof json, 'number', 'correct id type generated');
         done();
       }
     );
   });
 
-  test('invalid json returns proper response', function(t) {
-    common.testPOST(t, '/api/metadat', undefined,
+  test('invalid json throws 500', function(t) {
+    common.testPOST(t, '/api/' + endpoint, undefined,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 500);
@@ -43,7 +42,7 @@ module.exports.all = function (test, common) {
     common.getRegistry(t, function (err, api, done) {
       request({
         method: 'OPTIONS',
-        uri: 'http://localhost:' + api.port + '/api/metadat',
+        uri: 'http://localhost:' + api.port + '/api/' + endpoint,
       },
       function (err, res, json) {
         t.ifError(err);
@@ -53,39 +52,5 @@ module.exports.all = function (test, common) {
     });
   });
 
-  test('invalid field type throws 500', function(t) {
-    var data = {
-      'owner_id': 'DELETE FROM *',
-      'name': 'hello',
-      'url': 'http://dat-data.dathub.org',
-      'license': 'BSD-2'
-     // 'keywords': ['entry', 'test', 'data', 'dathub']
-    };
-
-    common.testPOST(t, '/api/metadat', data,
-      function (err, api, res, json, done) {
-        t.ifError(err);
-        t.equal(res.statusCode, 500);
-        done();
-      }
-    );
-  });
-
-  test('missing required field throws 500', function(t) {
-    var data = {
-      'owner_id': 1,
-      'url': 'http://dat-data.dathub.org',
-      'license': 'BSD-2'
-     // 'keywords': ['entry', 'test', 'data', 'dathub']
-    };
-
-    common.testPOST(t, '/api/metadat', data,
-      function (err, api, res, json, done) {
-        t.ifError(err);
-        t.equal(res.statusCode, 500);
-        done();
-      }
-    );
-  });
 };
 

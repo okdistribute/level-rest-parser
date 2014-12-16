@@ -1,162 +1,62 @@
-level-restful
+level-quickrest
 =============
 
-A simple plug and play REST wrapper for leveldb, as a simple extension to [level-orm](http://github.com/eugeneware/level-orm)
+A simple rest wrapper for a leveldb instance. See [karissa/quickrest](https://github.com/karissa/quickrest) for examples of interacting with the API.
 
-[![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
 
-[![build status](https://secure.travis-ci.org/karissa/level-restful.png)](http://travis-ci.org/karissa/level-restful)
+[![NPM](https://nodei.co/npm/level-quickrest.png?compact=true)](https://nodei.co/npm/level-quickrest/)
+
+[![build status](https://secure.travis-ci.org/karissa/level-quickrest.png)](http://travis-ci.org/karissa/level-quickrest)
+
 
 # Installation
 This module is installed via npm:
 
 ```bash
-$ npm install level-restful
+$ npm install level-quickrest
 ```
 
 ## Usage
 
+
 ### Basic example
 
-You extend the base class to give you REST post, put, delete, and get. You specify a list of fields to ensure validation of your object so the database stays safe from any pesky clients.
-
 ```js
-var http = require('http');
-var level = require('level');
-var db = level('/tmp/db', { valueEncoding: 'json' });
-var RestModel = require('level-restful');
+var debug = require('debug')('models');
+var Models = require('level-orm');
+var level = require('level-prebuilt');
+var util = require('util');
+var bytewise = require('bytewise/hex');
 
-function Users(db) {
+var QuickRestLevel = require('level-quickrest')
 
-  var fields = [
-    {
-      'name': 'handle',
-      'type': 'string'
-    },
-    {
-      'name': 'email',
-      'type': 'string',
-      'index': true
-    },
-    {
-      'name': 'address',
-      'type': 'string'
-    },
-    {
-      'name': 'age',
-      'type': 'number',
-      'optional': true
-    }
-  ];
+var db = level(dbPath,
+  {
+    keyEncoding: bytewise,
+    valueEncoding: 'json'
+  }
+);
 
-  // users is the sublevel name to user
-  // handle is the primary key
-  RestModels.call(this, db, 'users', 'handle', fields);
-}
-
-// make it inherit from RestModel
-util.inherits(Users, RestModel);
+var levelBook = new QuickRestLevel(db, 'book', 'id');
 ```
 
-#### Wire up your models to your server
-
-The below example is just one of the many ways of wiring up your models to the server. Because this is a tool, **not a framework**, we leave it up to you to tailor it to your use case.
+### Create a server
 
 ```js
-models = {
-  'users': Users
-};
-
-var Router = require('routes-router');
-var router = Router();
+var QuickRest = require('quickrest')
 
 // Wire up API endpoints
-router.addRoute('/api/:model/:id?', function(req, res, opts) {
-  var id = parseInt(opts.params.id) || opts.params.id || ''
-  var model = models[opts.params.model]
-  if (!model) {
-    return cb(new Error('no model'))
-  }
-  model.dispatch(req, res, id, cb)
-});
-
-var server = http.createServer(router)''
-server.listen(8000)''
-```
-
-*note: this uses res.end() under the hood.*
-
-#### Auto incremented keys
-
-You can use a ```keyfn``` to set auto incremented keys on your models. Do not put the key in your fields list, it will be generated upon save by [eugeneware/level-orm](https://github.com/eugeneware/level-orm).
-
-```js
-var timestamp = require('monotonic-timestamp')
-
-function Book(db) {
-  fields = [
-    {
-      'name': 'owner_id',
-      'type': 'number'
-    },
-    {
-      'name': 'name',
-      'type': 'string'
-    }
-  ];
-  // Call the parent constructor. id is the primary key, but we
-  // don't have to define that in the object's schema. It'll be created
-  // automagically by level-orm when a keyfn is provided. (see below)
-  RestModels.call(this, db, 'book', 'id', fields);
-}
-
-// make it inherit from RestModels
-util.inherits(Book, RestModels);
-
-// id is auto incremented by the unique timestamp.
-// could be more sophisticated.
-Book.prototype.keyfn = timestamp;
-```
-
-#### Secondary indexing
-You can create a secondary index on any of your models by adding ```index: true``` to the validation schema
-
-```js
-var timestamp = require('monotonic-timestamp')
-
-function Book(db) {
-  fields = [
-    {
-      'name': 'owner_id',
-      'type': 'number'
-    },
-    {
-      'name': 'author',
-      'type': 'string'
-    }
-    {
-      'name': 'name',
-      'type': 'string',
-      'index': true
-    }
-  ];
-  RestModels.call(this, db, 'book', 'id', fields);
-}
-```
-
-Now, a REST consumer can call the api to filter on one of the indexed fields. NOTE, at this time you can only filter on one field.
-
-```bash
-$ curl 'http://localhost:8000/api/book?name=Moby%20Dick'
-{
-  'owner_id': 4,
-  'author': 'Mark Twain',
-  'name': 'Moby Dick'
-}
+router.addRoute('/api/book/id?', function(req, res) {
+  var id = ... // get id here
+  QuickRest.dispatch(levelBook, req, res, id, function (err, data) {
+    res.end(JSON.stringify(data))
+  })
+})
 ```
 
 #### Compound Keys and Shared Containers
-This library extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers.
+A ```QuickRestLevel``` instance extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
+
 
 
 # License
