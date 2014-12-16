@@ -34,6 +34,7 @@
   "devDependencies": {
     "bytewise": "^0.7.1",
     "grunt-complexity": "^0.2.0",
+    "level-prebuilt": "^0.18.0-2",
     "monotonic-timestamp": "0.0.9",
     "request": "^2.51.0",
     "rimraf": "^2.2.8",
