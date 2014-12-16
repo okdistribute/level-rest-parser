@@ -24,19 +24,18 @@ module.exports.all = function (test, common, endpoint) {
             t.ifError(err);
             t.equal(res.statusCode, 200, 'GET statusCode 200');
             t.deepEqual(data, json, 'GET returns correct created data');
-          }
-        );
 
-        request('http://localhost:' + api.port + '/api/' + endpoint,
-          function (err, res, json) {
-            t.ifError(err);
-            t.equal(res.statusCode, 200, 'GET statusCode 200');
-            t.equal(json.length, 1, 'GET get correct object length back');
-            done();
+            request('http://localhost:' + api.port + '/api/' + endpoint,
+              function (err, res, json) {
+                t.ifError(err);
+                t.equal(res.statusCode, 200, 'GET statusCode 200');
+                t.equal(json.length, 1, 'GET get correct object length back');
+                done();
+              }
+            );
           }
         );
       }
     );
-
   });
 };

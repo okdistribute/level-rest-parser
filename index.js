@@ -8,16 +8,16 @@ function LevelQuickRest(opts) {
 }
 util.inherits(LevelQuickRest, Models);
 
-LevelQuickRest.prototype.post = function (model, cb) {
-  Models.prototype.save.call(this, model, cb)
+LevelQuickRest.prototype.post = function (data, cb) {
+  Models.prototype.save.call(this, data, cb)
 }
 
-LevelQuickRest.prototype.delete = function (model, cb) {
-  Models.prototype.del.call(this, model, cb)
+LevelQuickRest.prototype.delete = function (data, cb) {
+  Models.prototype.del.call(this, data, cb)
 }
 
-LevelQuickRest.prototype.put = function (key, model, cb) {
-  this.sublevel.put(key, model, function (err) {
+LevelQuickRest.prototype.put = function (key, data, cb) {
+  this.sublevel.put(key, data, function (err) {
     if (err) return cb(err);
     cb(null, key);
   });
