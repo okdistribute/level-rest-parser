@@ -1,4 +1,4 @@
-level-restful
+quickrest-orm
 =============
 
 A simple plug and play REST wrapper for any ORM.
@@ -91,7 +91,7 @@ Book.prototype.all = function (cb) {
 You can then wrap your new Book in a ```QuickRestModel```. It gives you the method ```dispatch``` which is used in the below example:
 
 ```js
-var QuickRestModel = require('quickrest-model')
+var QuickRestModel = require('quickrest-orm')
 var Book = require('./book.js')
 
 // make the book model
