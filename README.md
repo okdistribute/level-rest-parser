@@ -1,7 +1,7 @@
 level-quickrest
 =============
 
-A simple request parser that enforces REST style. Uses a leveldb instance for data storage. See [karissa/quickrest](https://github.com/karissa/quickrest) for examples of interacting with the REST API parser layer.
+A simple request parser that enforces REST style. Uses a leveldb instance for data storage. See [karissa/quickrest](https://github.com/karissa/quickrest) for examples of interacting with the REST API parser.
 
 
 [![NPM](https://nodei.co/npm/level-quickrest.png?compact=true)](https://nodei.co/npm/level-quickrest/)
