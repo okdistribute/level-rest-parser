@@ -13,15 +13,15 @@ function createModel(dbPath) {
       valueEncoding: 'json'
     }
   );
-  var model = new QuickRestLevel({
+  var example = new QuickRestLevel({
     db: db,
-    name: 'level',
+    name: 'example',
     key: 'owner_id'
   })
 
   return {
     db: db, // for closing the handler on server shutdown
-    level: model
+    example: example
   };
 };
 

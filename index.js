@@ -12,8 +12,8 @@ LevelQuickRest.prototype.post = function (data, cb) {
   Models.prototype.save.call(this, data, cb)
 }
 
-LevelQuickRest.prototype.delete = function (data, cb) {
-  Models.prototype.del.call(this, data, cb)
+LevelQuickRest.prototype.delete = function (key, cb) {
+  Models.prototype.del.call(this, key, cb)
 }
 
 LevelQuickRest.prototype.put = function (key, data, cb) {

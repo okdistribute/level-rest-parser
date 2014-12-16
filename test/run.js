@@ -12,7 +12,7 @@ var testFiles = [
 ];
 
 var models = [
-  'level'
+  'example'
 ];
 
 var tests = [];
