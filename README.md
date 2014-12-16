@@ -55,7 +55,7 @@ router.addRoute('/api/book/:id?', function(req, res, opts) {
 ```
 
 #### Compound Keys and Shared Containers
-A ```QuickRestLevel``` instance extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
+```level-quickrest``` extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
 
 
 
