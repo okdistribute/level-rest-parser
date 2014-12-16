@@ -9,7 +9,7 @@ function RestModels(model, opts) {
   Parameters
   ------
   model : object
-  the model object should have the following methods:
+  the model object should have the following method signature:
   .put(id, data, function (err, data))
    -- data to be updated by id
   .get(id, function (err, data))
@@ -38,16 +38,16 @@ RestModels.prototype.dispatch = function (req, res, id, cb) {
   var method = req.method.toLowerCase();
   switch (method) {
     case 'post':
-      self.postHandler(req, res, cb);
+      self.handlers.post.call(self, req, res, cb);
       break;
     case 'get':
-      self.getHandler(req, res, id, cb);
+      self.handlers.get.call(self, req, res, id, cb);
       break;
     case 'put':
-      self.putHandler(req, res, id, cb);
+      self.handlers.put.call(self, req, res, id, cb);
       break;
     case 'delete':
-      self.deleteHandler(req, res, id, cb);
+      self.handlers.delete.call(self, req, res, id, cb);
       break;
     default:
       cb('method must be one of post put get or delete')
@@ -58,27 +58,29 @@ RestModels.prototype.dispatch = function (req, res, id, cb) {
 RestModels.prototype.getBodyData = function (req, res, cb) {
   var self = this;
   var data = {};
-  jsonBody(req, res, function (err, body) {
-    if (err || !body) {
+  jsonBody(req, res, function (err, data) {
+    if (err || !data) {
       return cb(err);
     }
-    debug('request data\n', body);
+    debug('request data\n', data);
     cb(null, data);
   });
 }
 
-RestModels.prototype.postHandler = function (req, res, cb) {
+RestModels.prototype.handlers = {};
+
+RestModels.prototype.handlers.post = function (req, res, cb) {
   var self = this;
   self.getBodyData(req, res, function(err, data) {
     if (err || !data) {
       return cb(err)
     }
-    debug('posting ', self.name, self.key, data, typeof data);
-    this.model.post(data, cb);
+    debug('posting ', data);
+    self.model.post(data, cb);
   });
 };
 
-RestModels.prototype.putHandler = function (req, res, id, cb) {
+RestModels.prototype.handlers.put = function (req, res, id, cb) {
   var self = this;
   if (!id) return cb('need an id to put', false);
 
@@ -86,18 +88,19 @@ RestModels.prototype.putHandler = function (req, res, id, cb) {
     if (err || !data) {
       return cb(err)
     }
-    debug('putting ', self.name, self.key, data);
-    this.model.put(id, data, cb);
+    debug('putting ', id, data);
+    self.model.put(id, data, cb);
   });
 };
 
-RestModels.prototype.deleteHandler = function (req, res, id, cb) {
+RestModels.prototype.handlers.delete = function (req, res, id, cb) {
+  var self = this
   if (!id) return cb('need an id to delete', false);
-  debug('deleting ', this.name, this.key, id);
-  this.model.delete(id, cb);
+  debug('deleting ', id);
+  self.model.delete(id, cb);
 };
 
-RestModels.prototype.getHandler = function (req, res, id, cb) {
+RestModels.prototype.handlers.get = function (req, res, id, cb) {
   // cb = function (err, data)
   var self = this
   if (!id) {
@@ -106,16 +109,16 @@ RestModels.prototype.getHandler = function (req, res, id, cb) {
 
     if (Object.keys(qs).length > 0) {
       debug('looking up qs', qs)
-      this.model.get(qs, cb);
+      self.model.get(qs, cb);
     }
     else {
       debug('returning all values')
-      this.model.all(cb);
+      self.model.all(cb);
     }
   }
   else {
     debug('getting by id', id)
-    this.model.get(id, cb);
+    self.model.get(id, cb);
   }
 };
 

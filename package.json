@@ -29,6 +29,7 @@
   "dependencies": {
     "body": "^4.5.0",
     "debug": "^2.1.0",
+    "level-orm": "^2.0.0"
   },
   "devDependencies": {
     "bytewise": "^0.7.1",

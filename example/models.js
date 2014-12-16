@@ -1,11 +1,13 @@
 var level = require('level-prebuilt');
+var Models = require('level-orm');
 var bytewise = require('bytewise/hex');
 var util = require('util');
 var debug = require('debug')('models');
 var timestamp = require('monotonic-timestamp');
 
-var RestModels = require('..');
 var config = require('./config.js');
+var RestModels = require('..')
+
 
 // TODO pass in overrides
 module.exports = function(dbPath) {
@@ -18,23 +20,30 @@ module.exports = function(dbPath) {
   );
 
   return {
-    db: db,
-    person: new Person(db),
-    metadat: new MetaDat(db)
+    db: db, // for closing the handler on server shutdown
+    metadat: new RestModels(new Metadat(db))
   };
 };
 
 
-function MetaDat(db) {
-  // Call the parent constructor. id is the primary key, but we
-  // don't have to define that in the object's schema. It'll be created
-  // automagically by level-orm when a keyfn is provided. (see below)
+function Metadat(db) {
+  Models.call(this, { db: db }, 'users', 'id');
 }
-new RestModels.call(this,);
+util.inherits(Metadat, Models);
 
-// make it inherit from RestModels
-util.inherits(MetaDat, RestModels);
+Metadat.prototype.post = function (model, cb) {
+  Models.prototype.save.call(this, model, cb)
+}
 
-// id is auto incremented by the unique timestamp.
-// could be more sophisticated.
-MetaDat.prototype.keyfn = timestamp;
+Metadat.prototype.delete = function (model, cb) {
+  Models.prototype.del.call(this, model, cb)
+}
+
+Metadat.prototype.put = function (key, model, cb) {
+  this.sublevel.put(key, model, function (err) {
+    if (err) return cb(err);
+    cb(null, key);
+  });
+}
+
+Metadat.prototype.keyfn = timestamp;

@@ -13,10 +13,10 @@ module.exports.all = function (test, common) {
     common.testPOST(t, '/api/metadat', data,
       function (err, api, res, json, done) {
         t.ifError(err);
-        t.equal(res.statusCode, 201);
-        t.equal(json.name, data.name);
+        t.equal(res.statusCode, 200, 'POST 200 statusCode');
+        t.equal(typeof json, 'number', 'POST returns id');
 
-        var metadatID = json.id;
+        var metadatID = json;
 
         request({
           method: 'DELETE',
@@ -24,12 +24,12 @@ module.exports.all = function (test, common) {
           json: data
         }, function (err, res, json) {
           t.ifError(err);
-          t.equal(res.statusCode, 200);
+          t.equal(res.statusCode, 200, 'POST 200 statusCode');
 
           request('http://localhost:' + api.port + '/api/metadat/' + metadatID,
             function (err, res, json) {
               t.ifError(err);
-              t.equal(res.statusCode, 204);
+              t.equal(res.statusCode, 500, 'POST 500 statusCode when no object to delete with that id');
               done();
             }
           );

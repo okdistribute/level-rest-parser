@@ -4,8 +4,6 @@ var common = require('./common.js')();
 
 
 var testFiles = [
-  'secondaryString.js',
-  'secondaryInt.js',
   'empty.js',
   'update.js',
   'get.js',
