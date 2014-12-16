@@ -14,8 +14,6 @@
     "url": "https://github.com/karissa/level-restful.git"
   },
   "keywords": [
-    "leveldb",
-    "level",
     "orm",
     "rest",
     "restful",
@@ -30,16 +28,13 @@
   "homepage": "https://github.com/karissa/level-restful",
   "dependencies": {
     "body": "^4.5.0",
-    "debug": "^2.1.0",
-    "level-orm": "~0.0.1",
-    "level-secondary": "^1.1.0"
+    "debug": "^2.1.0"
   },
   "devDependencies": {
     "bytewise": "^0.7.1",
+    "quickrest": "^1.0.1",
     "grunt-complexity": "^0.2.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-jssemicoloned": "0.0.6",
+    "level-orm": "^2.0.0",
     "level-prebuilt": "^0.18.0-2",
     "monotonic-timestamp": "0.0.9",
     "request": "^2.51.0",
