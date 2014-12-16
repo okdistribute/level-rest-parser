@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "bytewise": "^0.7.1",
+    "quickrest": "^1.0.1",
     "grunt-complexity": "^0.2.0",
     "level-orm": "^2.0.0",
     "level-prebuilt": "^0.18.0-2",
