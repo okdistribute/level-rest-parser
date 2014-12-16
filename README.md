@@ -24,7 +24,7 @@ DELETE /model/id
 This module is installed via npm:
 
 ```bash
-$ npm install quickrest-orm
+$ npm install level-quickrest
 ```
 
 ## Usage
