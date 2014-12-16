@@ -1,11 +1,11 @@
-level-quickrest
+quickrest-level
 =============
 
 A simple REST router for a leveldb instance.
 
-[![NPM](https://nodei.co/npm/level-quickrest.png?compact=true)](https://nodei.co/npm/level-quickrest/)
+[![NPM](https://nodei.co/npm/quickrest-level.png?compact=true)](https://nodei.co/npm/quickrest-level/)
 
-[![build status](https://secure.travis-ci.org/karissa/level-quickrest.png)](http://travis-ci.org/karissa/level-quickrest)
+[![build status](https://secure.travis-ci.org/karissa/quickrest-level.png)](http://travis-ci.org/karissa/quickrest-level)
 
 
 A REST client can call any of the basic REST api calls, implemented according to [this spec](http://www.restapitutorial.com/lessons/httpmethods.html). It will parse the request object and call the corresponding database object's method.
@@ -39,7 +39,7 @@ var level = require('level-prebuilt');
 var util = require('util');
 var bytewise = require('bytewise/hex');
 
-var LevelRest = require('level-quickrest')
+var QuickRestLevel = require('quickrest-level')
 
 var db = level(dbPath,
   {
@@ -48,7 +48,7 @@ var db = level(dbPath,
   }
 );
 
-var levelBook = new LevelRest(db, 'book', 'id');
+var levelBook = new QuickRestLevel(db, 'book', 'id');
 ```
 
 ### Create a server
@@ -66,7 +66,7 @@ router.addRoute('/api/book/id?', function(req, res) {
 ```
 
 #### Compound Keys and Shared Containers
-A ```LevelRest``` instance extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
+A ```QuickRestLevel``` instance extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
 
 
 ### Examples
