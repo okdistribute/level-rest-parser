@@ -30,21 +30,22 @@ $ npm install level-restful
 ### Basic example
 
 ```js
-function Simple(key) {
+function Book() {
+  this.currentKey = 0
   this.db = {}
-  this.key = key
 }
 
-Simple.prototype.post = function (model, cb) {
+Book.prototype.post = function (model, cb) {
   if(!model) {
     return cb('Need values to save')
   }
-  var key = model[this.key]
+  var key = this.currentKey += 1
   this.db[key] = model
+  this.currentKey = key
   return cb(null, key)
 }
 
-Simple.prototype.get = function (key, cb){
+Book.prototype.get = function (key, cb){
   if(!key) {
     return cb('Need a key')
   }
@@ -55,7 +56,7 @@ Simple.prototype.get = function (key, cb){
   return cb(null, this.db[key])
 }
 
-Simple.prototype.put = function (key, model, cb) {
+Book.prototype.put = function (key, model, cb) {
   if(!key) {
     return cb('Need a key')
   }
@@ -63,7 +64,7 @@ Simple.prototype.put = function (key, model, cb) {
   return cb(null, key)
 }
 
-Simple.prototype.delete = function (key, cb) {
+Book.prototype.delete = function (key, cb) {
   if(!key) {
     return cb('Need a key')
   }
@@ -71,7 +72,7 @@ Simple.prototype.delete = function (key, cb) {
   return cb(null)
 }
 
-Simple.prototype.all = function (cb) {
+Book.prototype.all = function (cb) {
   var values = []
   for (key in this.db) {
     values.push(this.db[key])
@@ -87,52 +88,83 @@ The below example is just one of the many ways of wiring up your models to the s
 
 ```js
 var QuickRestModel = require('quickrest-model')
+var Book = require('./book.js')
 
-var simple = new Simple('owner_id')
-
-var Router = require('routes-router');
-var router = Router();
+var bookDB = new Book()
+var bookModel = QuickRestModel(bookDB)
 
 // Wire up API endpoints
-router.addRoute('/api/simple/id?', function(req, res, opts) {
-  var id = parseInt(opts.params.id) || opts.params.id || ''
-  simpleRestModel.dispatch(req, res, id, function (err, data) {
-    if (err) {
-      console.error(err)
+router.addRoute('/api/book/id?', function(req, res, opts) {
+  bookModel.dispatch(req, res, id, function (err, data) {
+   if (err) {
       res.statusCode = 500;
-      res.end(JSON.stringify({'error': err.message}));
-      return
+      return res.end()
     }
 
     res.statusCode = 200
     res.end(JSON.stringify(data));
   })
-});
+})
 
 var server = http.createServer(router)''
 server.listen(8000)''
 ```
 
-Here's an example of doing filtering via the query api:
 
 ```bash
-$ curl 'http://localhost:8000/api/book?name=Moby%20Dick'
+$ curl -x POST 'http://localhost:8000/api/book' -d {'author': 'Mark Twain', 'name': 'Adventures of Huckleberry Finn'}
+44
+```
+
+```bash
+$ curl -x POST 'http://localhost:8000/api/book' -d {'author': 'Mark Twain', 'name': 'N/A'}
+45
+```
+
+```bash
+$ curl -x PUT 'http://localhost:8000/api/book/45' -d {'author': 'Mark Twain', 'name': 'Life on the Mississippi'}
+45
+```
+
+```bash
+$ curl 'http://localhost:8000/api/book'
 [
   {
-    'owner_id': 4,
+    'id': 44,
     'author': 'Mark Twain',
-    'name': 'Moby Dick'
+    'name': 'Adventures of Huckleberry Finn'
   },
   {
-    'owner_id': 4,
+    'id': 45,
     'author': 'Mark Twain',
-    'name': 'Moby Dick'
+    'name': 'Life on the Mississippi'
   }
 ]
 ```
 
-#### Compound Keys and Shared Containers
-This library extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers.
+```bash
+$ curl 'http://localhost:8000/api/book/45'
+{
+  'id': 45,
+  'author': 'Mark Twain',
+    'name': 'Life on the Mississippi'
+}
+```
+
+```bash
+$ curl -x DELETE 'http://localhost:8000/api/book/45'
+```
+
+```bash
+$ curl 'http://localhost:8000/api/book'
+[
+  {
+    'id': 44,
+    'author': 'Mark Twain',
+    'name': 'Adventures of Huckleberry Finn'
+  }
+]
+```
 
 
 # License
