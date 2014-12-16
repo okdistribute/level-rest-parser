@@ -3,7 +3,13 @@ level-restful
 
 A simple plug and play REST wrapper for any ORM.
 
-A REST client can call any of the basic REST api calls, implemented according to [this spec](http://www.restapitutorial.com/lessons/httpmethods.html)
+[![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
+
+[![build status](https://secure.travis-ci.org/karissa/level-restful.png)](http://travis-ci.org/karissa/level-restful)
+
+
+A REST client can call any of the basic REST api calls, implemented according to [this spec](http://www.restapitutorial.com/lessons/httpmethods.html). It will parse the request object and call the corresponding database object's method.
+
 
 ```
 GET /model
@@ -14,10 +20,6 @@ DELETE /model/id
 ```
 
 
-[![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
-
-[![build status](https://secure.travis-ci.org/karissa/level-restful.png)](http://travis-ci.org/karissa/level-restful)
-
 # Installation
 This module is installed via npm:
 
@@ -26,6 +28,8 @@ $ npm install level-restful
 ```
 
 ## Usage
+
+You need to create an object (ORM) that has the methods ```.post```, ```.get```, ```.put```, ```.delete```, and ```.all```
 
 ### Basic example
 
@@ -82,27 +86,27 @@ Book.prototype.all = function (cb) {
 
 ```
 
-#### Wire up your models to your server
+### Create a server
 
-The below example is just one of the many ways of wiring up your models to the server.
+You can then wrap your new Book in a ```QuickRestModel```. It gives you the method ```dispatch``` which is used in the below example:
 
 ```js
 var QuickRestModel = require('quickrest-model')
 var Book = require('./book.js')
 
+// make the book model
 var bookDB = new Book()
 var bookModel = QuickRestModel(bookDB)
 
 // Wire up API endpoints
-router.addRoute('/api/book/id?', function(req, res, opts) {
-  bookModel.dispatch(req, res, id, function (err, data) {
-   if (err) {
-      res.statusCode = 500;
-      return res.end()
-    }
+router.addRoute('/api/book/id?', function(req, res) {
 
-    res.statusCode = 200
-    res.end(JSON.stringify(data));
+  var id = ... // get id here
+
+  bookModel.dispatch(req, res, id, function (err, data) {
+
+    // data will be whatever you return from your model by the appropriate REST method call
+
   })
 })
 
