@@ -1,7 +1,18 @@
 level-restful
 =============
 
-A simple plug and play REST wrapper for leveldb, as a simple extension to [level-orm](http://github.com/eugeneware/level-orm)
+A simple plug and play REST wrapper for any ORM.
+
+A REST client can call any of the basic REST api calls, implemented according to [this spec](http://www.restapitutorial.com/lessons/httpmethods.html)
+
+```
+GET /model
+GET /model/id
+POST /model
+PUT /model/id
+DELETE /model/id
+```
+
 
 [![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
 
@@ -18,15 +29,66 @@ $ npm install level-restful
 
 ### Basic example
 
-This is an example with LevelDB, although any could work.
-
 ```js
+
+var EasyRest = require('easy-rest')
+
+var simpleRestModel = new EasyRest(new Simple('owner_id'))
+
+function Simple(key) {
+  this.db = {}
+  this.key = key
+}
+
+Simple.prototype.post = function (model, cb) {
+  if(!model) {
+    return cb('Need values to save')
+  }
+  var key = model[this.key]
+  this.db[key] = model
+  return cb(null, key)
+}
+
+Simple.prototype.get = function (key, cb){
+  if(!key) {
+    return cb('Need a key')
+  }
+  var val = this.db[key]
+  if (!val) {
+    return cb('NotFound')
+  }
+  return cb(null, this.db[key])
+}
+
+Simple.prototype.put = function (key, model, cb) {
+  if(!key) {
+    return cb('Need a key')
+  }
+  this.db[key] = model
+  return cb(null, key)
+}
+
+Simple.prototype.delete = function (key, cb) {
+  if(!key) {
+    return cb('Need a key')
+  }
+  delete this.db[key]
+  return cb(null)
+}
+
+Simple.prototype.all = function (cb) {
+  var values = []
+  for (key in this.db) {
+    values.push(this.db[key])
+  }
+  return cb(null, values)
+}
 
 ```
 
 #### Wire up your models to your server
 
-The below example is just one of the many ways of wiring up your models to the server. Because this is a tool, **not a framework**, we leave it up to you to tailor it to your use case.
+The below example is just one of the many ways of wiring up your models to the server.
 
 ```js
 models = {
@@ -37,23 +99,26 @@ var Router = require('routes-router');
 var router = Router();
 
 // Wire up API endpoints
-router.addRoute('/api/:model/:id?', function(req, res, opts) {
+router.addRoute('/api/simple/:id?', function(req, res, opts) {
   var id = parseInt(opts.params.id) || opts.params.id || ''
-  var model = models[opts.params.model]
-  if (!model) {
-    return cb(new Error('no model'))
-  }
-  model.dispatch(req, res, id, cb)
+  simpleRestModel.dispatch(req, res, id, function (err, data) {
+    if (err) {
+      console.error(err)
+      res.statusCode = 500;
+      res.end(JSON.stringify({'error': err.message}));
+      return
+    }
+
+    res.statusCode = 200
+    res.end(JSON.stringify(data));
+  })
 });
 
 var server = http.createServer(router)''
 server.listen(8000)''
 ```
 
-*note: this uses res.end() under the hood.*
-
-
-Now, a REST consumer can call the api to filter on one of your fields.
+Here's an example of doing filtering via the query api:
 
 ```bash
 $ curl 'http://localhost:8000/api/book?name=Moby%20Dick'

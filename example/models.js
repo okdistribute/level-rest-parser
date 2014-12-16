@@ -80,6 +80,7 @@ Simple.prototype.put = function (key, model, cb) {
   return cb(null, key)
 }
 
+
 Simple.prototype.delete = function (key, cb) {
   if(!key) {
     return cb('Need a key')
