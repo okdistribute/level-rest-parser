@@ -1,10 +1,29 @@
 var http = require('http');
 var Router = require('routes-router');
 
-var createModels = require('./models.js');
+var level = require('level-prebuilt');
+var bytewise = require('bytewise/hex');
+var QuickRest = require('quickrest')
+var QuickRestLevel = require('..')
+
+function createModel(dbPath) {
+  var db = level(dbPath,
+    {
+      keyEncoding: bytewise,
+      valueEncoding: 'json'
+    }
+  );
+  var model = new QuickRestLevel(db, 'level', 'owner_id')
+
+  return {
+    db: db, // for closing the handler on server shutdown
+    level: model
+  };
+};
+
 
 function Server (dbPath) {
-  var models = createModels(dbPath);
+  var models = createModel(dbPath);
 
   var router = Router();
   // Wire up API endpoints
@@ -14,14 +33,21 @@ function Server (dbPath) {
     if (!model) {
       return cb(new Error('no model'))
     }
-    model.dispatch(req, res, id, cb)
+    QuickRest.dispatch(model, req, res, id, function (err, data) {
+      if (err) {
+        console.error(err)
+        res.statusCode = 500;
+        res.end(JSON.stringify({'error': err.message}));
+        return
+      }
+
+      res.statusCode = 200
+      res.end(JSON.stringify(data));
+    })
   });
 
   var server = http.createServer(router);
   var port = 5000;
-  server.listen(port, function() {
-    console.log('listening on port', port);
-  });
 
   return  {
     server: server,
