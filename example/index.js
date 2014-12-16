@@ -1,10 +1,28 @@
 var http = require('http');
 var Router = require('routes-router');
 
-var createModels = require('./models');
+var level = require('level-prebuilt');
+var bytewise = require('bytewise/hex');
+var QuickRestLevel = require('..')
+
+function createModel(dbPath) {
+  var db = level(dbPath,
+    {
+      keyEncoding: bytewise,
+      valueEncoding: 'json'
+    }
+  );
+  var model = new QuickRestLevel(db, 'level', 'owner_id');
+
+  return {
+    db: db, // for closing the handler on server shutdown
+    level: model
+  };
+};
+
 
 function Server (dbPath) {
-  var models = createModels(dbPath);
+  var models = createModel(dbPath);
 
   var router = Router();
   // Wire up API endpoints
