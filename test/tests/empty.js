@@ -1,7 +1,7 @@
 var request = require('request').defaults({json: true});
 
 module.exports.all = function (test, common) {
-  test('get a metadat with empty db', function (t) {
+  test('empty', function (t) {
     common.getRegistry(t, function (err, api, done) {
       request('http://localhost:' + api.port + '/api/metadat/',
         function (err, res, json) {

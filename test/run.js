@@ -7,7 +7,8 @@ var testFiles = [
   'empty.js',
   'update.js',
   'get.js',
-  'delete.js'
+  'delete.js',
+  'create.js'
 ];
 
 var tests = [];

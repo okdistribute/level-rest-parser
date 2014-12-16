@@ -2,7 +2,7 @@ var request = require('request').defaults({json: true});
 var debug = require('debug')('get')
 
 module.exports.all = function (test, common) {
-  test('get a metadat', function (t) {
+  test('GET', function (t) {
 
     var data = {
       'owner_id': 2,

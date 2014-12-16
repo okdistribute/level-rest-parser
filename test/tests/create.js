@@ -1,7 +1,7 @@
 var request = require('request').defaults({json: true});
 
 module.exports.all = function (test, common) {
-  test('creates a new Metadat via POST', function(t) {
+  test('POST', function(t) {
     var data = {
       'owner_id': 1,
       'name': 'test entry',

@@ -3,7 +3,7 @@ var debug = require('debug')('update')
 
 module.exports.all = function (test, common) {
   //TODO: callback hell! want to use promises?
-  test('get a metadat', function (t) {
+  test('PUT/update', function (t) {
     var data = {
       'owner_id': 1,
       'name': 'test entry',
