@@ -1,7 +1,7 @@
-quickrest-orm
+level-restful
 =============
 
-A simple plug and play REST wrapper for any ORM.
+A simple REST router for a leveldb instance.
 
 [![NPM](https://nodei.co/npm/level-restful.png?compact=true)](https://nodei.co/npm/level-restful/)
 
@@ -29,89 +29,38 @@ $ npm install quickrest-orm
 
 ## Usage
 
-You need to create an object (ORM) that has the methods ```.post```, ```.get```, ```.put```, ```.delete```, and ```.all```
 
 ### Basic example
 
 ```js
-function Book() {
-  this.currentKey = 0
-  this.db = {}
-}
+var debug = require('debug')('models');
+var Models = require('level-orm');
+var level = require('level-prebuilt');
+var util = require('util');
+var bytewise = require('bytewise/hex');
 
-Book.prototype.post = function (model, cb) {
-  if(!model) {
-    return cb('Need values to save')
-  }
-  var key = this.currentKey += 1
-  this.db[key] = model
-  this.currentKey = key
-  return cb(null, key)
-}
+var LevelRest = require('level-quickrest')
 
-Book.prototype.get = function (key, cb){
-  if(!key) {
-    return cb('Need a key')
+var db = level(dbPath,
+  {
+    keyEncoding: bytewise,
+    valueEncoding: 'json'
   }
-  var val = this.db[key]
-  if (!val) {
-    return cb('NotFound')
-  }
-  return cb(null, this.db[key])
-}
+);
 
-Book.prototype.put = function (key, model, cb) {
-  if(!key) {
-    return cb('Need a key')
-  }
-  this.db[key] = model
-  return cb(null, key)
-}
-
-Book.prototype.delete = function (key, cb) {
-  if(!key) {
-    return cb('Need a key')
-  }
-  delete this.db[key]
-  return cb(null)
-}
-
-Book.prototype.all = function (cb) {
-  var values = []
-  for (key in this.db) {
-    values.push(this.db[key])
-  }
-  return cb(null, values)
-}
-
+var book = new LevelRest(db, 'book', 'id');
 ```
 
 ### Create a server
 
-You can then wrap your new Book in a ```QuickRestModel```. It gives you the method ```dispatch``` which is used in the below example:
-
 ```js
-var QuickRestModel = require('quickrest-orm')
-var Book = require('./book.js')
-
-// make the book model
-var bookDB = new Book()
-var bookModel = QuickRestModel(bookDB)
-
 // Wire up API endpoints
 router.addRoute('/api/book/id?', function(req, res) {
-
   var id = ... // get id here
-
-  bookModel.dispatch(req, res, id, function (err, data) {
-
-    // data will be whatever you return from your model by the appropriate REST method call
-
+  book.dispatch(req, res, id, function (err, data) {
+    res.end(JSON.stringify(data))
   })
 })
-
-var server = http.createServer(router)''
-server.listen(8000)''
 ```
 
 

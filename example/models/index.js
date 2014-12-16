@@ -1,16 +1,21 @@
 var debug = require('debug')('models');
-
-var QuickRestModel = require('../..')
-var Simple = require('./simple.js')
+var Models = require('level-orm');
+var level = require('level-prebuilt');
+var util = require('util');
+var bytewise = require('bytewise/hex');
+var QuickRestLevel = require('../..')
 
 module.exports = function(dbPath) {
-  var leveldb = require('./leveldb.js')(dbPath)
-
-  var simple = new Simple('owner_id')
+  var db = level(dbPath,
+    {
+      keyEncoding: bytewise,
+      valueEncoding: 'json'
+    }
+  );
+  var model = new QuickRestLevel(db, 'level', 'owner_id');
 
   return {
-    db: leveldb.db, // for closing the handler on server shutdown
-    simple: QuickRestModel(simple),
-    level: QuickRestModel(leveldb.Level)
+    db: db, // for closing the handler on server shutdown
+    level: model
   };
 };
