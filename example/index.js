@@ -3,7 +3,7 @@ var Router = require('routes-router');
 
 var level = require('level-prebuilt');
 var bytewise = require('bytewise/hex');
-var QuickRest = require('../../quickrest-orm')
+var QuickRest = require('../../quickrest')
 var QuickRestLevel = require('..')
 
 function createModel(dbPath) {

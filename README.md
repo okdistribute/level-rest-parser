@@ -40,7 +40,7 @@ var util = require('util');
 var bytewise = require('bytewise/hex');
 
 var LevelRest = require('level-quickrest')
-var QuickRest = require('quickrest-orm')
+var QuickRest = require('quickrest')
 
 var db = level(dbPath,
   {
