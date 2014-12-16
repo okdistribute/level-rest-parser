@@ -28,11 +28,11 @@
   },
   "devDependencies": {
     "bytewise": "^0.7.1",
-    "quickrest": "^1.0.1",
     "grunt-complexity": "^0.2.0",
     "level-orm": "^2.0.0",
-    "level": "^0.18.0",
+    "level-prebuilt": "^0.18.0-2",
     "monotonic-timestamp": "0.0.9",
+    "quickrest": "^1.0.1",
     "request": "^2.51.0",
     "rimraf": "^2.2.8",
     "routes-router": "^4.1.1",
