@@ -3,6 +3,7 @@ var Router = require('routes-router');
 
 var level = require('level-prebuilt');
 var bytewise = require('bytewise/hex');
+var QuickRest = require('../../quickrest-orm')
 var QuickRestLevel = require('..')
 
 function createModel(dbPath) {
@@ -12,7 +13,7 @@ function createModel(dbPath) {
       valueEncoding: 'json'
     }
   );
-  var model = new QuickRestLevel(db, 'level', 'owner_id');
+  var model = QuickRest(new QuickRestLevel(db, 'level', 'owner_id'))
 
   return {
     db: db, // for closing the handler on server shutdown
