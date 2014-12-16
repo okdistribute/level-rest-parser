@@ -3,8 +3,8 @@ var level = require('level-prebuilt');
 var util = require('util');
 var bytewise = require('bytewise/hex');
 
-function LevelQuickRest(db, field, key) {
-  Models.call(this, { db: db }, field, key);
+function LevelQuickRest(opts) {
+  Models.call(this, { db: opts.db }, opts.name, opts.key);
 }
 util.inherits(LevelQuickRest, Models);
 

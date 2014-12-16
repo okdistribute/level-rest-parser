@@ -22,33 +22,33 @@ $ npm install level-quickrest
 ### Basic example
 
 ```js
-var debug = require('debug')('models');
-var Models = require('level-orm');
 var level = require('level-prebuilt');
-var util = require('util');
-var bytewise = require('bytewise/hex');
-
-var QuickRestLevel = require('level-quickrest')
+var LevelQuickRest = require('level-quickrest')
+var QuickRest = require('quickrest')
 
 var db = level(dbPath,
   {
-    keyEncoding: bytewise,
+    keyEncoding: require('bytewise/hex'),
     valueEncoding: 'json'
   }
 );
 
-var levelBook = new QuickRestLevel(db, 'book', 'id');
-```
+var levelBook = new LevelQuickRest({
+  db: db,
+  name: 'book',
+  key: 'id'
+});
 
-### Create a server
-
-```js
-var QuickRest = require('quickrest')
-
-// Wire up API endpoints
-router.addRoute('/api/book/id?', function(req, res) {
-  var id = ... // get id here
+router.addRoute('/api/book/:id?', function(req, res, opts) {
+  var id = parseInt(opts.params.id)
   QuickRest.dispatch(levelBook, req, res, id, function (err, data) {
+    if (err) {
+      res.statusCode = 500
+      res.end()
+      return
+    }
+
+    res.statusCode = 200
     res.end(JSON.stringify(data))
   })
 })
