@@ -24,7 +24,7 @@ DELETE /model/id
 This module is installed via npm:
 
 ```bash
-$ npm install level-restful
+$ npm install quickrest-orm
 ```
 
 ## Usage
@@ -115,59 +115,61 @@ server.listen(8000)''
 ```
 
 
-```bash
-$ curl -x POST 'http://localhost:8000/api/book' -d {'author': 'Mark Twain', 'name': 'Adventures of Huckleberry Finn'}
-44
-```
+### Create a server
+
+
+### Examples
+
+Create a new book
 
 ```bash
 $ curl -x POST 'http://localhost:8000/api/book' -d {'author': 'Mark Twain', 'name': 'N/A'}
-45
+1
 ```
 
+Update a book
+
 ```bash
-$ curl -x PUT 'http://localhost:8000/api/book/45' -d {'author': 'Mark Twain', 'name': 'Life on the Mississippi'}
-45
+$ curl -x PUT 'http://localhost:8000/api/book/1' -d {'author': 'Mark Twain', 'name': 'Life on the Mississippi'}
+1
 ```
+
+Get all books
 
 ```bash
 $ curl 'http://localhost:8000/api/book'
 [
   {
-    'id': 44,
-    'author': 'Mark Twain',
-    'name': 'Adventures of Huckleberry Finn'
-  },
-  {
-    'id': 45,
+    'id': 1,
     'author': 'Mark Twain',
     'name': 'Life on the Mississippi'
-  }
+  },
+  etc...
 ]
 ```
 
+Get a single book
+
 ```bash
-$ curl 'http://localhost:8000/api/book/45'
+$ curl 'http://localhost:8000/api/book/1'
 {
-  'id': 45,
+  'id': 1,
   'author': 'Mark Twain',
-    'name': 'Life on the Mississippi'
+  'name': 'Life on the Mississippi'
 }
 ```
 
+Delete a book
+
 ```bash
-$ curl -x DELETE 'http://localhost:8000/api/book/45'
+$ curl -x DELETE 'http://localhost:8000/api/book/1'
 ```
+
+Get all books (none remain)
 
 ```bash
 $ curl 'http://localhost:8000/api/book'
-[
-  {
-    'id': 44,
-    'author': 'Mark Twain',
-    'name': 'Adventures of Huckleberry Finn'
-  }
-]
+[]
 ```
 
 
