@@ -1,7 +1,7 @@
 var request = require('request').defaults({json: true});
 
-module.exports.all = function (test, common) {
-  test('POST', function(t) {
+module.exports.all = function (test, common, endpoint) {
+  test('POST ' + endpoint, function(t) {
     var data = {
       'owner_id': 1,
       'name': 'test entry',
@@ -10,7 +10,7 @@ module.exports.all = function (test, common) {
      // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
-    common.testPOST(t, '/api/metadat', data,
+    common.testPOST(t, '/api/' + endpoint, data,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 200);
@@ -20,8 +20,8 @@ module.exports.all = function (test, common) {
     );
   });
 
-  test('invalid json returns proper response', function(t) {
-    common.testPOST(t, '/api/metadat', undefined,
+  test('invalid json throws 500', function(t) {
+    common.testPOST(t, '/api/' + endpoint, undefined,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 500);
@@ -42,7 +42,7 @@ module.exports.all = function (test, common) {
     common.getRegistry(t, function (err, api, done) {
       request({
         method: 'OPTIONS',
-        uri: 'http://localhost:' + api.port + '/api/metadat',
+        uri: 'http://localhost:' + api.port + '/api/' + endpoint,
       },
       function (err, res, json) {
         t.ifError(err);

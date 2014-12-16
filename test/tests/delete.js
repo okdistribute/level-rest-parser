@@ -1,6 +1,6 @@
 var request = require('request').defaults({json: true});
 
-module.exports.all = function (test, common) {
+module.exports.all = function (test, common, endpoint) {
   test('creates a new Metadat via POST then deletes it', function(t) {
     var data = {
       'owner_id': 1,
@@ -10,7 +10,7 @@ module.exports.all = function (test, common) {
      // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
-    common.testPOST(t, '/api/metadat', data,
+    common.testPOST(t, '/api/' + endpoint , data,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 200, 'POST 200 statusCode');
@@ -20,13 +20,13 @@ module.exports.all = function (test, common) {
 
         request({
           method: 'DELETE',
-          uri: 'http://localhost:' + api.port + '/api/metadat/' + metadatID,
+          uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + metadatID,
           json: data
         }, function (err, res, json) {
           t.ifError(err);
           t.equal(res.statusCode, 200, 'POST 200 statusCode');
 
-          request('http://localhost:' + api.port + '/api/metadat/' + metadatID,
+          request('http://localhost:' + api.port + '/api/' + endpoint + '/' + metadatID,
             function (err, res, json) {
               t.ifError(err);
               t.equal(res.statusCode, 500, 'POST 500 statusCode when no object to delete with that id');

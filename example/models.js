@@ -21,29 +21,77 @@ module.exports = function(dbPath) {
 
   return {
     db: db, // for closing the handler on server shutdown
-    metadat: new RestModels(new Metadat(db))
+    simple: new RestModels(new Simple('owner_id')),
+    level: new RestModels(new Level(db))
   };
 };
 
 
-function Metadat(db) {
-  Models.call(this, { db: db }, 'users', 'id');
+function Level(db) {
+  Models.call(this, { db: db }, 'level', 'owner_id');
 }
-util.inherits(Metadat, Models);
+util.inherits(Level, Models);
 
-Metadat.prototype.post = function (model, cb) {
+Level.prototype.post = function (model, cb) {
   Models.prototype.save.call(this, model, cb)
 }
 
-Metadat.prototype.delete = function (model, cb) {
+Level.prototype.delete = function (model, cb) {
   Models.prototype.del.call(this, model, cb)
 }
 
-Metadat.prototype.put = function (key, model, cb) {
+Level.prototype.put = function (key, model, cb) {
   this.sublevel.put(key, model, function (err) {
     if (err) return cb(err);
     cb(null, key);
   });
 }
 
-Metadat.prototype.keyfn = timestamp;
+function Simple(key) {
+  this.db = {}
+  this.key = key
+}
+
+Simple.prototype.post = function (model, cb) {
+  if(!model) {
+    return cb('Need values to save')
+  }
+  var key = model[this.key]
+  this.db[key] = model
+  return cb(null, key)
+}
+
+Simple.prototype.get = function (key, cb){
+  if(!key) {
+    return cb('Need a key')
+  }
+  var val = this.db[key]
+  if (!val) {
+    return cb('NotFound')
+  }
+  return cb(null, this.db[key])
+}
+
+Simple.prototype.put = function (key, model, cb) {
+  if(!key) {
+    return cb('Need a key')
+  }
+  this.db[key] = model
+  return cb(null, key)
+}
+
+Simple.prototype.delete = function (key, cb) {
+  if(!key) {
+    return cb('Need a key')
+  }
+  delete this.db[key]
+  return cb(null)
+}
+
+Simple.prototype.all = function (cb) {
+  var values = []
+  for (key in this.db) {
+    values.push(this.db[key])
+  }
+  return cb(null, values)
+}

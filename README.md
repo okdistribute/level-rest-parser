@@ -18,44 +18,10 @@ $ npm install level-restful
 
 ### Basic example
 
-You extend the base class to give you REST post, put, delete, and get. You specify a list of fields to ensure validation of your object so the database stays safe from any pesky clients.
+This is an example with LevelDB, although any could work.
 
 ```js
-var http = require('http');
-var level = require('level');
-var db = level('/tmp/db', { valueEncoding: 'json' });
-var RestModel = require('level-restful');
 
-function Users(db) {
-
-  var fields = [
-    {
-      'name': 'handle',
-      'type': 'string'
-    },
-    {
-      'name': 'email',
-      'type': 'string',
-      'index': true
-    },
-    {
-      'name': 'address',
-      'type': 'string'
-    },
-    {
-      'name': 'age',
-      'type': 'number',
-      'optional': true
-    }
-  ];
-
-  // users is the sublevel name to user
-  // handle is the primary key
-  RestModels.call(this, db, 'users', 'handle', fields);
-}
-
-// make it inherit from RestModel
-util.inherits(Users, RestModel);
 ```
 
 #### Wire up your models to your server
@@ -86,73 +52,23 @@ server.listen(8000)''
 
 *note: this uses res.end() under the hood.*
 
-#### Auto incremented keys
 
-You can use a ```keyfn``` to set auto incremented keys on your models. Do not put the key in your fields list, it will be generated upon save by [eugeneware/level-orm](https://github.com/eugeneware/level-orm).
-
-```js
-var timestamp = require('monotonic-timestamp')
-
-function Book(db) {
-  fields = [
-    {
-      'name': 'owner_id',
-      'type': 'number'
-    },
-    {
-      'name': 'name',
-      'type': 'string'
-    }
-  ];
-  // Call the parent constructor. id is the primary key, but we
-  // don't have to define that in the object's schema. It'll be created
-  // automagically by level-orm when a keyfn is provided. (see below)
-  RestModels.call(this, db, 'book', 'id', fields);
-}
-
-// make it inherit from RestModels
-util.inherits(Book, RestModels);
-
-// id is auto incremented by the unique timestamp.
-// could be more sophisticated.
-Book.prototype.keyfn = timestamp;
-```
-
-#### Secondary indexing
-You can create a secondary index on any of your models by adding ```index: true``` to the validation schema
-
-```js
-var timestamp = require('monotonic-timestamp')
-
-function Book(db) {
-  fields = [
-    {
-      'name': 'owner_id',
-      'type': 'number'
-    },
-    {
-      'name': 'author',
-      'type': 'string'
-    }
-    {
-      'name': 'name',
-      'type': 'string',
-      'index': true
-    }
-  ];
-  RestModels.call(this, db, 'book', 'id', fields);
-}
-```
-
-Now, a REST consumer can call the api to filter on one of the indexed fields. NOTE, at this time you can only filter on one field.
+Now, a REST consumer can call the api to filter on one of your fields.
 
 ```bash
 $ curl 'http://localhost:8000/api/book?name=Moby%20Dick'
-{
-  'owner_id': 4,
-  'author': 'Mark Twain',
-  'name': 'Moby Dick'
-}
+[
+  {
+    'owner_id': 4,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  },
+  {
+    'owner_id': 4,
+    'author': 'Mark Twain',
+    'name': 'Moby Dick'
+  }
+]
 ```
 
 #### Compound Keys and Shared Containers

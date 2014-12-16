@@ -1,7 +1,7 @@
 var request = require('request').defaults({json: true});
 var debug = require('debug')('update')
 
-module.exports.all = function (test, common) {
+module.exports.all = function (test, common, endpoint) {
   //TODO: callback hell! want to use promises?
   test('PUT/update', function (t) {
     var data = {
@@ -12,7 +12,7 @@ module.exports.all = function (test, common) {
      // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
-    common.testPOST(t, '/api/metadat', data,
+    common.testPOST(t, '/api/' + endpoint, data,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 200, 'POST statusCode 200');
@@ -23,7 +23,7 @@ module.exports.all = function (test, common) {
         data.name = 'modify name field';
         request({
           method: 'PUT',
-          uri: 'http://localhost:' + api.port + '/api/metadat/' + data.id,
+          uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + data.id,
           json: data
         },
           function (err, res, json) {
@@ -32,7 +32,7 @@ module.exports.all = function (test, common) {
 
             request({
               method: 'GET',
-              uri: 'http://localhost:' + api.port + '/api/metadat/' + data.id,
+              uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + data.id,
               json: data
             }, function (err, res, json) {
               t.equal(json.name, 'modify name field', 'PUT, modify name field returns properly');
@@ -43,7 +43,7 @@ module.exports.all = function (test, common) {
 
               request({
                 method: 'PUT',
-                uri: 'http://localhost:' + api.port + '/api/metadat/' + data.id,
+                uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + data.id,
                 json: data
               },
                 function (err, res, json) {
@@ -52,7 +52,7 @@ module.exports.all = function (test, common) {
 
                   request({
                     method: 'GET',
-                    uri: 'http://localhost:' + api.port + '/api/metadat/' + data.id,
+                    uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + data.id,
                     json: data
                   }, function (err, res, json) {
                       t.equal(json.name, 'testing two fields', 'PUT, modify name field returns properly');

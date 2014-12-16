@@ -11,6 +11,11 @@ var testFiles = [
   'create.js'
 ];
 
+var models = [
+  'level',
+  'simple'
+];
+
 var tests = [];
 for (var i in testFiles) {
   tests.push(require(path.join(__dirname, 'tests', testFiles[i])));
@@ -23,14 +28,20 @@ var specificTest = process.argv[3];
 
 if (specificTestFile) {
   var testModule = require(path.join(__dirname, specificTestFile));
-  if (specificTest) testModule[specificTest](test, common);
-  else testModule.all(test, common);
+  if (specificTest) {
+     runTestModule(testModule[specificTest])
+  }
+  else runTestModule(testModule)
 } else {
   runAll();
 }
 
-function runAll() {
-  tests.map(function(t) {
-    t.all(test, common);
+function runTestModule(testModule) {
+  models.map(function(model) {
+    testModule.all(test, common, model);
   });
+}
+
+function runAll() {
+  tests.map(runTestModule)
 }
