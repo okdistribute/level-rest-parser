@@ -2,9 +2,13 @@ var jsonBody = require('body/json');
 var url = require('url')
 var debug = require('debug')('restful');
 
-module.exports = RestModels;
+module.exports = function (model, opts) {
+  return new QuickRestModel(model, opts)
+}
 
-function RestModels(model, opts) {
+module.exports.model = QuickRestModel
+
+function QuickRestModel(model, opts) {
   /*
   Parameters
   ------
@@ -32,7 +36,7 @@ function RestModels(model, opts) {
   this.model = model
 }
 
-RestModels.prototype.dispatch = function (req, res, id, cb) {
+QuickRestModel.prototype.dispatch = function (req, res, id, cb) {
   var self = this
   if (self.disabled) return cb('this model has rest endpoint disabled');
   var method = req.method.toLowerCase();
@@ -55,7 +59,7 @@ RestModels.prototype.dispatch = function (req, res, id, cb) {
   }
 }
 
-RestModels.prototype.getBodyData = function (req, res, cb) {
+QuickRestModel.prototype.getBodyData = function (req, res, cb) {
   var self = this;
   var data = {};
   jsonBody(req, res, function (err, data) {
@@ -67,9 +71,9 @@ RestModels.prototype.getBodyData = function (req, res, cb) {
   });
 }
 
-RestModels.prototype.handlers = {};
+QuickRestModel.prototype.handlers = {};
 
-RestModels.prototype.handlers.post = function (req, res, cb) {
+QuickRestModel.prototype.handlers.post = function (req, res, cb) {
   var self = this;
   self.getBodyData(req, res, function(err, data) {
     if (err || !data) {
@@ -80,7 +84,7 @@ RestModels.prototype.handlers.post = function (req, res, cb) {
   });
 };
 
-RestModels.prototype.handlers.put = function (req, res, id, cb) {
+QuickRestModel.prototype.handlers.put = function (req, res, id, cb) {
   var self = this;
   if (!id) return cb('need an id to put', false);
 
@@ -93,14 +97,14 @@ RestModels.prototype.handlers.put = function (req, res, id, cb) {
   });
 };
 
-RestModels.prototype.handlers.delete = function (req, res, id, cb) {
+QuickRestModel.prototype.handlers.delete = function (req, res, id, cb) {
   var self = this
   if (!id) return cb('need an id to delete', false);
   debug('deleting ', id);
   self.model.delete(id, cb);
 };
 
-RestModels.prototype.handlers.get = function (req, res, id, cb) {
+QuickRestModel.prototype.handlers.get = function (req, res, id, cb) {
   // cb = function (err, data)
   var self = this
   if (!id) {

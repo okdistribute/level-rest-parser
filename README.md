@@ -30,11 +30,6 @@ $ npm install level-restful
 ### Basic example
 
 ```js
-
-var EasyRest = require('easy-rest')
-
-var simpleRestModel = new EasyRest(new Simple('owner_id'))
-
 function Simple(key) {
   this.db = {}
   this.key = key
@@ -91,15 +86,15 @@ Simple.prototype.all = function (cb) {
 The below example is just one of the many ways of wiring up your models to the server.
 
 ```js
-models = {
-  'users': Users
-};
+var QuickRestModel = require('quickrest-model')
+
+var simple = new Simple('owner_id')
 
 var Router = require('routes-router');
 var router = Router();
 
 // Wire up API endpoints
-router.addRoute('/api/simple/:id?', function(req, res, opts) {
+router.addRoute('/api/simple/id?', function(req, res, opts) {
   var id = parseInt(opts.params.id) || opts.params.id || ''
   simpleRestModel.dispatch(req, res, id, function (err, data) {
     if (err) {

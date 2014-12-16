@@ -1,7 +1,7 @@
 var http = require('http');
 var Router = require('routes-router');
 
-var createModels = require('./models.js');
+var createModels = require('./models');
 
 function Server (dbPath) {
   var models = createModels(dbPath);
