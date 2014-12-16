@@ -13,7 +13,7 @@ function createModel(dbPath) {
       valueEncoding: 'json'
     }
   );
-  var model = QuickRest(new QuickRestLevel(db, 'level', 'owner_id'))
+  var model = new QuickRestLevel(db, 'level', 'owner_id')
 
   return {
     db: db, // for closing the handler on server shutdown
@@ -33,7 +33,7 @@ function Server (dbPath) {
     if (!model) {
       return cb(new Error('no model'))
     }
-    model.dispatch(req, res, id, function (err, data) {
+    QuickRest.dispatch(model, req, res, id, function (err, data) {
       if (err) {
         console.error(err)
         res.statusCode = 500;
