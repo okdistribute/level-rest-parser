@@ -40,7 +40,6 @@ var util = require('util');
 var bytewise = require('bytewise/hex');
 
 var LevelRest = require('level-quickrest')
-var QuickRest = require('quickrest')
 
 var db = level(dbPath,
   {
@@ -50,16 +49,17 @@ var db = level(dbPath,
 );
 
 var levelBook = new LevelRest(db, 'book', 'id');
-var book = QuickRest(levelBook);
 ```
 
 ### Create a server
 
 ```js
+var QuickRest = require('quickrest')
+
 // Wire up API endpoints
 router.addRoute('/api/book/id?', function(req, res) {
   var id = ... // get id here
-  book.dispatch(req, res, id, function (err, data) {
+  QuickRest.dispatch(levelBook, req, res, id, function (err, data) {
     res.end(JSON.stringify(data))
   })
 })
