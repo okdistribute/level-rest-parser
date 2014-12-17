@@ -1,7 +1,7 @@
 level-quickrest
 =============
 
-A simple request parser that enforces REST style. Uses a leveldb instance for data storage. See [karissa/quickrest](https://github.com/karissa/quickrest) for examples of interacting with the REST API parser.
+A simple request parser that enforces REST style. Uses a leveldb instance for data storage. See [karissa/rest-parser](https://github.com/karissa/rest-parser) for examples of interacting with the REST API parser.
 
 
 [![NPM](https://nodei.co/npm/level-quickrest.png?compact=true)](https://nodei.co/npm/level-quickrest/)
@@ -23,8 +23,8 @@ $ npm install level-quickrest
 
 ```js
 var level = require('level-prebuilt');
-var LevelQuickRest = require('level-quickrest')
-var QuickRest = require('quickrest')
+var LevelORM = require('level-quickrest')
+var RestParser = require('rest-parser')
 
 var db = level(dbPath,
   {
@@ -33,7 +33,7 @@ var db = level(dbPath,
   }
 );
 
-var levelBook = new LevelQuickRest({
+var levelBook = new LevelORM({
   db: db,
   name: 'book',
   key: 'id'
@@ -41,7 +41,7 @@ var levelBook = new LevelQuickRest({
 
 router.addRoute('/api/book/:id?', function(req, res, opts) {
   var id = parseInt(opts.params.id)
-  QuickRest.dispatch(levelBook, req, res, id, function (err, data) {
+  RestParser.dispatch(levelBook, req, res, id, function (err, data) {
     if (err) {
       res.statusCode = 500
       res.end()

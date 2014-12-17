@@ -3,8 +3,8 @@ var Router = require('routes-router');
 
 var level = require('level-prebuilt');
 var bytewise = require('bytewise/hex');
-var QuickRest = require('quickrest')
-var QuickRestLevel = require('..')
+var RestParser = require('rest-parser')
+var RestParserLevel = require('..')
 
 function createModel(dbPath) {
   var db = level(dbPath,
@@ -13,7 +13,7 @@ function createModel(dbPath) {
       valueEncoding: 'json'
     }
   );
-  var example = new QuickRestLevel({
+  var example = new RestParserLevel({
     db: db,
     name: 'example',
     key: 'owner_id'
@@ -37,7 +37,7 @@ function Server (dbPath) {
     if (!model) {
       return cb(new Error('no model'))
     }
-    QuickRest.dispatch(model, req, res, id, function (err, data) {
+    RestParser.dispatch(model, req, res, id, function (err, data) {
       if (err) {
         console.error(err)
         res.statusCode = 500;
