@@ -24,7 +24,8 @@
   "homepage": "https://github.com/karissa/level-quickrest",
   "dependencies": {
     "body": "^4.5.0",
-    "debug": "^2.1.0"
+    "debug": "^2.1.0",
+    "rest-parser": "^1.0.3"
   },
   "devDependencies": {
     "bytewise": "^0.7.1",
@@ -32,12 +33,11 @@
     "level-orm": "^2.0.0",
     "level-prebuilt": "^0.18.0-2",
     "monotonic-timestamp": "0.0.9",
-    "quickrest": "^1.0.1",
     "request": "^2.51.0",
     "rimraf": "^2.2.8",
     "routes-router": "^4.1.1",
     "run-series": "^1.0.2",
     "tap-spec": "^2.1.1",
-    "tape": "^3.0.1"
+    "tape": "^3.0.3"
   }
 }
