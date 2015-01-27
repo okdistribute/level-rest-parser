@@ -1,14 +1,14 @@
 {
-  "name": "level-quickrest",
-  "version": "1.0.0",
-  "description": "A leveldb backend for the quickrest module.",
+  "name": "level-rest-parser",
+  "version": "2.0.0",
+  "description": "A leveldb backend for the rest-parser module.",
   "main": "index.js",
   "scripts": {
     "test": "node test/run.js | tap-spec"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karissa/level-quickrest.git"
+    "url": "https://github.com/karissa/level-rest-parser.git"
   },
   "keywords": [
     "leveldb",
@@ -19,19 +19,18 @@
   "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "bsd",
   "bugs": {
-    "url": "https://github.com/karissa/level-quickrest/issues"
+    "url": "https://github.com/karissa/level-rest-parser/issues"
   },
-  "homepage": "https://github.com/karissa/level-quickrest",
+  "homepage": "https://github.com/karissa/level-rest-parser",
   "dependencies": {
-    "body": "^4.5.0",
     "concat-stream": "^1.4.7",
     "debug": "^2.1.0",
     "hat": "0.0.3",
-    "is-my-json-valid": "^2.0.3",
-    "rest-parser": "^1.0.3"
+    "is-my-json-valid": "^2.0.3"
   },
   "devDependencies": {
     "bytewise": "^0.7.1",
+    "rest-parser": "^1.0.3",
     "grunt-complexity": "^0.2.0",
     "level-orm": "^2.0.0",
     "level-prebuilt": "^0.18.0-2",
