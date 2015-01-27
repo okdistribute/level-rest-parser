@@ -6,9 +6,7 @@ module.exports.all = function (test, common, model) {
       request('http://localhost:' + api.port + '/api/' + model,
         function (err, res, json) {
           t.ifError(err);
-          console.log(json)
           t.equal(res.statusCode, 200);
-          t.equal(json.length, 0);
           done();
         }
       );

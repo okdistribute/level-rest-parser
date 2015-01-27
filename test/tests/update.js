@@ -9,18 +9,16 @@ module.exports.all = function (test, common, endpoint) {
       'name': 'test entry',
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
-     // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
     common.testPOST(t, '/api/' + endpoint, data,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 200, 'POST statusCode 200');
-        debug('debugin', json);
-        t.equal(typeof json, 'number', 'POST get id back')
-        data.id = json;
-
+        debug('after create returns', json);
+        data.id = json.data.id;
         data.name = 'modify name field';
+
         request({
           method: 'PUT',
           uri: 'http://localhost:' + api.port + '/api/' + endpoint + '/' + data.id,

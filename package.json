@@ -24,7 +24,10 @@
   "homepage": "https://github.com/karissa/level-quickrest",
   "dependencies": {
     "body": "^4.5.0",
+    "concat-stream": "^1.4.7",
     "debug": "^2.1.0",
+    "hat": "0.0.3",
+    "is-my-json-valid": "^2.0.3",
     "rest-parser": "^1.0.3"
   },
   "devDependencies": {

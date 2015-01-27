@@ -7,14 +7,12 @@ module.exports.all = function (test, common, endpoint) {
       'name': 'test entry',
       'url': 'http://dat-data.dathub.org',
       'license': 'BSD-2'
-     // 'keywords': ['entry', 'test', 'data', 'dathub']
     };
 
     common.testPOST(t, '/api/' + endpoint , data,
       function (err, api, res, json, done) {
         t.ifError(err);
         t.equal(res.statusCode, 200, 'POST 200 statusCode');
-        t.equal(typeof json, 'number', 'POST returns id');
 
         var metadatID = json;
 

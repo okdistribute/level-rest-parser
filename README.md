@@ -18,13 +18,38 @@ $ npm install level-quickrest
 
 ## Usage
 
+### Schema Validation
+Level-rest-parser validates the incoming requests pesky clients won't be able to muck up the database.
+
+**bookSchema.json**
+```json
+{
+  "type": "object",
+  "properties": {
+    "author_id": {
+      "type": "number",
+      "required": true,
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+    },
+    "license": {
+      "type": "string"
+    }
+  }
+}
+```
 
 ### Basic example
 
+**Set up your LevelDB**
 ```js
 var level = require('level-prebuilt');
-var LevelORM = require('level-quickrest')
-var RestParser = require('rest-parser')
 
 var db = level(dbPath,
   {
@@ -32,31 +57,44 @@ var db = level(dbPath,
     valueEncoding: 'json'
   }
 );
+```
 
-var levelBook = new LevelORM({
-  db: db,
-  name: 'book',
-  key: 'id'
-});
+**Create your models & rest-parser**
+You pass the schema into your
+```js
+var LevelRest = require('level-rest-parser')
+var RestParser = require('rest-parser')
 
-router.addRoute('/api/book/:id?', function(req, res, opts) {
-  var id = parseInt(opts.params.id)
-  RestParser.dispatch(levelBook, req, res, id, function (err, data) {
+
+var Book = new RestParser(LevelRest(db, {
+  schema: require('./bookSchema.json')
+})
+
+var models = {
+  book: Book
+}
+```
+
+**Set up the router**
+```
+router.addRoute('/api/:model/:id?', function(req, res, opts) {
+  var id = opts.params.id
+  var opts = {
+    id: id
+  }1
+  var model = models[opts.params.model]
+  if (!model) return res.end('No model found')
+  model.dispatch(req, opts, function (err, data) {
     if (err) {
       res.statusCode = 500
-      res.end()
-      return
+      return res.end()
     }
 
     res.statusCode = 200
-    res.end(JSON.stringify(data))
+    res.json(data)
   })
 })
 ```
-
-#### Compound Keys and Shared Containers
-```level-quickrest``` extends from [eugeneware/level-orm](https://github.com/eugeneware/level-orm), which has examples of Compound Keys and Shared Containers and it can be used in an identical fashion.
-
 
 
 # License

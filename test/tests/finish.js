@@ -1,6 +1,5 @@
-module.exports = function (test, cb) {
+module.exports.all = function (test, common, endpoint) {
   test('', function(t) {
-    if (cb) cb();
     t.end();
   });
 };

@@ -4,7 +4,7 @@ var Router = require('routes-router');
 var level = require('level-prebuilt');
 var bytewise = require('bytewise/hex');
 var RestParser = require('rest-parser')
-var RestParserLevel = require('..')
+var LevelRest = require('..')
 
 function createModel(dbPath) {
   var db = level(dbPath,
@@ -13,11 +13,32 @@ function createModel(dbPath) {
       valueEncoding: 'json'
     }
   );
-  var example = new RestParserLevel({
-    db: db,
-    name: 'example',
-    key: 'owner_id'
-  })
+  var schema = {
+    "type": "object",
+    "properties": {
+      "owner_id": {
+        "type": "number",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "required": true,
+      },
+      "url": {
+        "type": "string",
+        "required": true,
+      },
+      "license": {
+        "type": "string"
+      }
+    }
+  }
+  var opts = {
+    schema: schema
+  }
+  var model = LevelRest(db, opts)
+
+  var example = new RestParser(model)
 
   return {
     db: db, // for closing the handler on server shutdown
@@ -32,12 +53,16 @@ function Server (dbPath) {
   var router = Router();
   // Wire up API endpoints
   router.addRoute('/api/:model/:id?', function(req, res, opts, cb) {
-    var id = parseInt(opts.params.id) || opts.params.id || ''
+    var id = opts.params.id || ''
     var model = models[opts.params.model]
     if (!model) {
+      console.error('no model')
       return cb(new Error('no model'))
     }
-    RestParser.dispatch(model, req, res, id, function (err, data) {
+    var opts = {
+      id: id
+    }
+    models.example.dispatch(req, opts, function (err, data) {
       if (err) {
         console.error(err)
         res.statusCode = 500;
