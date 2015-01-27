@@ -1,19 +1,18 @@
-level-quickrest
+level-rest-parser
 =============
 
-A simple request parser that enforces REST style. Uses a leveldb instance for data storage. See [karissa/rest-parser](https://github.com/karissa/rest-parser) for examples of interacting with the REST API parser.
+A simple request parser that enforces REST style with schema validation. Uses a leveldb instance for data storage. See [karissa/rest-parser](https://github.com/karissa/rest-parser) for examples of interacting with the REST API parser.
 
+[![NPM](https://nodei.co/npm/level-rest-parser.png?compact=true)](https://nodei.co/npm/level-rest-parser/)
 
-[![NPM](https://nodei.co/npm/level-quickrest.png?compact=true)](https://nodei.co/npm/level-quickrest/)
-
-[![build status](https://secure.travis-ci.org/karissa/level-quickrest.png)](http://travis-ci.org/karissa/level-quickrest)
+[![build status](https://secure.travis-ci.org/karissa/level-rest-parser.png)](http://travis-ci.org/karissa/level-rest-parser)
 
 
 # Installation
 This module is installed via npm:
 
 ```bash
-$ npm install level-quickrest
+$ npm install level-rest-parser
 ```
 
 ## Usage
