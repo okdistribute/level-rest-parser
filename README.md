@@ -59,11 +59,10 @@ var db = level(dbPath,
 ```
 
 **Create your models & rest-parser**
-You pass the schema into your
+You pass the schema into your `LevelRest` instance and the rest parser will validate any objects before they are inserted into your leveldb
 ```js
 var LevelRest = require('level-rest-parser')
 var RestParser = require('rest-parser')
-
 
 var Book = new RestParser(LevelRest(db, {
   schema: require('./bookSchema.json')
