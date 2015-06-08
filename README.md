@@ -1,7 +1,7 @@
 level-rest-parser
 =============
 
-A simple request parser that enforces REST style with schema validation. Uses a leveldb instance for data storage. See [karissa/rest-parser](https://github.com/karissa/rest-parser) for examples of interacting with the REST API parser.
+A simple request parser that enforces REST style with schema validation. Uses a leveldb instance for data storage. See [karissa/rest-parser](https://github.com/karissa/node-rest-parser) for examples of interacting with the REST API parser.
 
 [![NPM](https://nodei.co/npm/level-rest-parser.png?compact=true)](https://nodei.co/npm/level-rest-parser/)
 
